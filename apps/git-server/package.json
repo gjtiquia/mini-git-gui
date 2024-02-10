@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "author": "gjtiquia",
   "license": "MIT",
+  "main": "src/index.ts",
   "scripts": {
     "start": "node dist/main.js",
     "build": "tsup src/main.ts",
@@ -10,8 +11,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@trpc/server": "^10.45.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
