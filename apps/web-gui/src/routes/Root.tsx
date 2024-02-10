@@ -4,7 +4,7 @@ export function Root() {
 
     const getCommitsQuery = trpc.getAllCommits.useQuery();
 
-    if (getCommitsQuery.isLoading)
+    if (getCommitsQuery.isPending)
         return <p>Loading...</p>
 
     return (
