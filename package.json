@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "version": "0.1.0",
+  "author": "gjtiquia",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
