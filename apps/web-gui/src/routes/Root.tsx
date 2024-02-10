@@ -8,6 +8,17 @@ export function Root() {
         return <p>Loading...</p>
 
     return (
-        <p>{JSON.stringify(getCommitsQuery.data)}</p>
+        <div className="flex flex-col gap-4">
+            {getCommitsQuery.data?.map(x => {
+                return (
+                    <div>
+                        <p>Subject: {x.subject}</p>
+                        <p>Author: {x.author}</p>
+                        <p>Hash: {x.hash}</p>
+                        <p>Date: {x.date.toLocaleLowerCase()}</p>
+                    </div>
+                )
+            })}
+        </div>
     )
 }
