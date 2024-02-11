@@ -7,6 +7,9 @@ export function Root() {
     if (getCommitsQuery.isPending)
         return <p>Loading...</p>
 
+    if (getCommitsQuery.isError)
+        return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
+
     return (
         <div className="flex flex-col">
             {getCommitsQuery.data?.map(x => {
