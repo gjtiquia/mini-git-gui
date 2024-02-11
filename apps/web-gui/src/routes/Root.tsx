@@ -24,7 +24,8 @@ function CommitsView(props: { commits: Commits }) {
 
         const isEven = index % 2 === 0;
         if (isEven) {
-            nodeArray.push("Node");
+            // nodeArray.push("Node");
+            nodeArray.push("Line");
         }
         else {
             nodeArray.push("Line");
@@ -43,7 +44,7 @@ function CommitsView(props: { commits: Commits }) {
                 const date = new Date(x.timestamp * 1000);
 
                 return (
-                    <div key={x.hash} className="flex gap-2 px-2 py-1">
+                    <div key={x.hash} className="flex gap-2 px-2">
 
                         {x.nodeArray.map((nodeType, index) => {
                             switch (nodeType) {
@@ -53,7 +54,7 @@ function CommitsView(props: { commits: Commits }) {
                             }
                         })}
 
-                        <div className="flex-grow">
+                        <div className="flex-grow py-1">
                             <p className="font-bold text-sm line-clamp-1">{x.subject}</p>
 
                             <div className="flex justify-between gap-2 text-xs">
@@ -95,24 +96,14 @@ function Empty() {
 }
 
 function Line() {
-
-    // TODO : Hardcoded a straight line with div for now
-    return (
-        <div className="min-w-2 max-w-2 flex justify-center">
-            <div className="h-full bg-red-500 w-1" />
-        </div>
-    )
-
     return (
         <svg
-            viewBox="0 0 100 100" // Shift origin from top left to center + Make it responsive
+            viewBox="0 0 100 100" // Make it responsive
+            preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
             xmlns="http://www.w3.org/2000/svg"
             className="min-w-2 max-w-2"
-        // className="min-w-[100px] max-w-[100px] min-h-[100px] max-h-[100px]"
         >
-            {/* <circle cx="0" cy="0" r="50%" fill="red" /> */}
-            {/* <line x1="50" y1="0" x2="50" y2="100" className="stroke-red-500 stroke-[0.5rem]" /> */}
-            <rect x="25" y="0" width="50" height="100" fill="red" />
+            <rect x="25" y="0" width="40" height="100" fill="red" />
         </svg>
     );
 }
