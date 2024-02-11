@@ -43,7 +43,7 @@ function CommitsView(props: { commits: Commits }) {
             });
 
             nodeArray.push({
-                nodeType: "Circle",
+                nodeType: "None",
                 lineType: "None"
             });
         }
@@ -84,11 +84,26 @@ function CommitsView(props: { commits: Commits }) {
 
 function NodeElement(props: { node: Node }) {
 
-    if (props.node.lineType === "Full")
-        return <FullLine />
-
-    if (props.node.nodeType === "Circle")
+    if (props.node.nodeType === "None")
+        // return <LineElement lineType={props.node.lineType} />
         return <Circle />
+
+    return (
+        <div className="relative">
+            <div>
+                <Circle />
+            </div>
+
+            <div>
+                <LineElement lineType={props.node.lineType} />
+            </div>
+        </div>
+    )
+}
+
+function LineElement(props: { lineType: LineType }) {
+    if (props.lineType === "Full")
+        return <FullLine />
 
     return <Empty />
 }
@@ -124,7 +139,7 @@ function FullLine() {
             viewBox="0 0 100 100" // Make it responsive
             preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
             xmlns="http://www.w3.org/2000/svg"
-            className="min-w-2 max-w-2"
+            className="min-w-2 max-w-2 h-full"
         >
             <rect x="25" y="0" width="40" height="100" fill="red" />
         </svg>
