@@ -24,9 +24,9 @@ export function Root() {
                         </svg>
 
                         <div className="flex-grow">
-                            <p className="font-bold">{x.subject}</p>
+                            <p className="font-bold text-sm line-clamp-1">{x.subject}</p>
 
-                            <div className="flex justify-between gap-2 text-sm">
+                            <div className="flex justify-between gap-2 text-xs">
                                 <p>{x.author}</p>
                                 <p>{x.abbreviatedHash}</p>
                                 <p>{date.toLocaleString()}</p>
