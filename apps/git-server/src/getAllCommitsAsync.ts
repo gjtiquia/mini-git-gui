@@ -1,12 +1,15 @@
 import { spawn } from "child_process";
 
 interface Commit {
-    subject: string;
-    author: string;
-    hash: string;
-    parentHashes: string[];
-    timestamp: number;
-    date: Date;
+    subject: string,
+    author: string,
+
+    hash: string,
+    abbreviatedHash: string,
+
+    parentHashes: string[],
+
+    timestamp: number
 }
 
 export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
@@ -29,7 +32,7 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
         // format
         // - %x09 = tab character (eg. --pretty=format:%h%x09%an%x09%ad%x09%s)
 
-        const gitLogChildProcess = spawn("git", ["log", "--all", `--pretty=format:%s${delimiter}%an${delimiter}%H${delimiter}%P${delimiter}%at${endline}`], {
+        const gitLogChildProcess = spawn("git", ["log", "--all", `--pretty=format:%s${delimiter}%an${delimiter}%H${delimiter}%h${delimiter}%P${delimiter}%at${endline}`], {
             cwd: rootDirectory
         });
 
@@ -43,18 +46,29 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
                 .filter(x => x.length > 0) // Some elements are empty
                 .map(x => x.trim()) // Trims whitespaces and newline chars
                 .map(x => {
+
                     const commitArray = x.split(delimiter);
 
-                    const timestamp = Number.parseInt(commitArray[4]);
-                    const parentHashes = commitArray[3].split(" ").filter(x => x.length > 0);
+                    const subject = commitArray[0];
+                    const author = commitArray[1];
+
+                    const hash = commitArray[2];
+                    const abbreviatedHash = commitArray[3];
+
+                    const parentHashes = commitArray[4].split(" ").filter(x => x.length > 0);
+
+                    const timestamp = Number.parseInt(commitArray[5]);
 
                     return {
-                        subject: commitArray[0],
-                        author: commitArray[1],
-                        hash: commitArray[2],
+                        subject,
+                        author,
+
+                        hash,
+                        abbreviatedHash,
+
                         parentHashes,
-                        timestamp,
-                        date: new Date(timestamp * 1000)
+
+                        timestamp
                     };
                 });
 

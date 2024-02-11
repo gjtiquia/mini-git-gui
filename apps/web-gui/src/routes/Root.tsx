@@ -8,14 +8,30 @@ export function Root() {
         return <p>Loading...</p>
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
             {getCommitsQuery.data?.map(x => {
+
+                const date = new Date(x.timestamp * 1000);
+
                 return (
-                    <div>
-                        <p>Subject: {x.subject}</p>
-                        <p>Author: {x.author}</p>
-                        <p>Hash: {x.hash}</p>
-                        <p>Date: {x.date.toLocaleLowerCase()}</p>
+                    <div key={x.hash} className="flex gap-2 px-2 py-1">
+                        <svg
+                            viewBox="-50 -50 100 100" // Shift origin from top left to center
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="min-w-2 max-w-2"
+                        >
+                            <circle cx="0" cy="0" r="50%" fill="red" />
+                        </svg>
+
+                        <div className="flex-grow">
+                            <p className="font-bold">{x.subject}</p>
+
+                            <div className="flex justify-between gap-2 text-sm">
+                                <p>{x.author}</p>
+                                <p>{x.abbreviatedHash}</p>
+                                <p>{date.toLocaleString()}</p>
+                            </div>
+                        </div>
                     </div>
                 )
             })}
