@@ -14,22 +14,38 @@ export function Root() {
 }
 
 type Commits = AppRouterOutput["getAllCommits"];
-type NodeType = "Node" | "Empty" | "Line"
+
+type NodeType = "None" | "Circle"
+type LineType = "None" | "Full" | "Top" | "Bottom"
+
+interface Node {
+    nodeType: NodeType,
+    lineType: LineType
+}
 
 function CommitsView(props: { commits: Commits }) {
 
-    const renderArray = props.commits.map((commit, index) => {
+    const commitArray = props.commits.map((commit, index) => {
 
-        const nodeArray: NodeType[] = []
+        const nodeArray: Node[] = []
 
         const isEven = index % 2 === 0;
         if (isEven) {
-            // nodeArray.push("Node");
-            nodeArray.push("Line");
+            nodeArray.push({
+                nodeType: "Circle",
+                lineType: "Full"
+            });
         }
         else {
-            nodeArray.push("Line");
-            nodeArray.push("Node");
+            nodeArray.push({
+                nodeType: "Circle",
+                lineType: "Full"
+            });
+
+            nodeArray.push({
+                nodeType: "Circle",
+                lineType: "None"
+            });
         }
 
         return {
@@ -40,26 +56,22 @@ function CommitsView(props: { commits: Commits }) {
 
     return (
         <div className="flex flex-col">
-            {renderArray.map(x => {
-                const date = new Date(x.timestamp * 1000);
+            {commitArray.map(commit => {
+                const date = new Date(commit.timestamp * 1000);
 
                 return (
-                    <div key={x.hash} className="flex gap-2 px-2">
+                    <div key={commit.hash} className="flex gap-2 px-2">
 
-                        {x.nodeArray.map((nodeType, index) => {
-                            switch (nodeType) {
-                                case "Node": return <Node key={x.hash + index} />
-                                case "Empty": return <Empty key={x.hash + index} />
-                                case "Line": return <Line key={x.hash + index} />
-                            }
+                        {commit.nodeArray.map((node, nodeIndex) => {
+                            return <NodeElement key={commit.hash + nodeIndex} node={node} />
                         })}
 
                         <div className="flex-grow py-1">
-                            <p className="font-bold text-sm line-clamp-1">{x.subject}</p>
+                            <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
 
                             <div className="flex justify-between gap-2 text-xs">
-                                <p>{x.author}</p>
-                                <p>{x.abbreviatedHash}</p>
+                                <p>{commit.author}</p>
+                                <p>{commit.abbreviatedHash}</p>
                                 <p>{date.toLocaleString()}</p>
                             </div>
                         </div>
@@ -70,7 +82,18 @@ function CommitsView(props: { commits: Commits }) {
     )
 }
 
-function Node() {
+function NodeElement(props: { node: Node }) {
+
+    if (props.node.lineType === "Full")
+        return <FullLine />
+
+    if (props.node.nodeType === "Circle")
+        return <Circle />
+
+    return <Empty />
+}
+
+function Circle() {
 
     return (
         <svg
@@ -90,12 +113,12 @@ function Empty() {
             xmlns="http://www.w3.org/2000/svg"
             className="min-w-2 max-w-2"
         >
-            {/* <circle cx="0" cy="0" r="50%" fill="red" /> */}
+            {/* Nothing */}
         </svg>
     );
 }
 
-function Line() {
+function FullLine() {
     return (
         <svg
             viewBox="0 0 100 100" // Make it responsive
