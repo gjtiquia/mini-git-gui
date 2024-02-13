@@ -2,9 +2,24 @@ import type { AppRouterOutput } from "../../lib/trpc";
 import { GraphNodeSettings } from "./GraphNode/GraphNode";
 import { VerticalLineType } from "./GraphNode/VerticalLineElement";
 
-type Commits = AppRouterOutput["getAllCommits"]
+export type Commits = AppRouterOutput["getAllCommits"]
+type Commit = Commits[0]
 
-export function createCommitsWithGraphNodes(commits: Commits) {
+interface CommitWithGraphNodes extends Commit {
+    graphNodes: GraphNodeSettings[]
+}
+
+export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNodes[] {
+
+    if (commits.length === 1)
+        return [{
+            ...commits[0],
+            graphNodes: [{
+                centerType: "Circle",
+                verticalLineType: "None",
+                horizontalLineType: "None"
+            }]
+        }]
 
     return commits.map((commit, index, array) => {
 
