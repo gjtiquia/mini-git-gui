@@ -7,7 +7,8 @@ const trpcAppRouter = router({
         .query(async () => {
 
             // const rootDirectory = "/Users/gjtiquia/Documents/Projects/SelfProjects/mini-text-editor";
-            const rootDirectory = "/Users/EuniceChen/Downloads/_GJDocuments/headless-game-engine"
+            // const rootDirectory = "/Users/EuniceChen/Downloads/_GJDocuments/headless-game-engine"
+            const rootDirectory = "/Users/EuniceChen/Downloads/_GJDocuments/mini-git-gui"
 
             const commits = await getAllCommitsAsync(rootDirectory);
             return commits;
