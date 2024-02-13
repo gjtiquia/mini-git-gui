@@ -25,27 +25,43 @@ interface NodeSettings {
 
 function CommitsView(props: { commits: Commits }) {
 
-    const commitArray = props.commits.map((commit, index) => {
+    const commitArray = props.commits.map((commit, index, array) => {
 
         const nodeArray: NodeSettings[] = []
+
+        const isFirst = index === 0;
+        const isLast = index === array.length - 1;
+        const isFirstOrLast = isFirst || isLast;
+
+        const line: LineType =
+            isFirst ? "BottomHalf"
+                : isLast ? "TopHalf"
+                    : "Full";
 
         const isEven = index % 2 === 0;
         if (isEven) {
             nodeArray.push({
                 nodeType: "Circle",
-                lineType: "Full"
+                lineType: line
             });
+
+            if (!isFirstOrLast)
+                nodeArray.push({
+                    nodeType: "None",
+                    lineType: "TopHalf"
+                });
         }
         else {
             nodeArray.push({
-                nodeType: "Circle",
-                lineType: "Full"
+                nodeType: isFirstOrLast ? "Circle" : "None",
+                lineType: line
             });
 
-            nodeArray.push({
-                nodeType: "Circle",
-                lineType: "None"
-            });
+            if (!isFirstOrLast)
+                nodeArray.push({
+                    nodeType: "Circle",
+                    lineType: "BottomHalf"
+                });
         }
 
         return {
@@ -103,13 +119,6 @@ function NodeElement(props: { nodeType: NodeType }) {
     return null;
 }
 
-function LineElement(props: { lineType: LineType }) {
-    if (props.lineType === "Full")
-        return <FullLine />
-
-    return null;
-}
-
 function Circle() {
 
     return (
@@ -123,7 +132,31 @@ function Circle() {
     );
 }
 
-function FullLine() {
+interface LineProps {
+    width: number,
+    color: string,
+}
+
+function LineElement(props: { lineType: LineType }) {
+
+    const lineProps: LineProps = {
+        width: 40,
+        color: "red"
+    }
+
+    if (props.lineType === "Full")
+        return <FullLine {...lineProps} />
+
+    if (props.lineType === "TopHalf")
+        return <TopHalfLine {...lineProps} />
+
+    if (props.lineType === "BottomHalf")
+        return <BottomHalfLine {...lineProps} />
+
+    return null;
+}
+
+function FullLine(props: LineProps) {
     return (
         <svg
             viewBox="0 0 100 100" // Make it responsive
@@ -131,7 +164,51 @@ function FullLine() {
             xmlns="http://www.w3.org/2000/svg"
             className="min-w-full max-w-full h-full"
         >
-            <rect x="25" y="0" width="40" height="100" fill="red" />
+            <rect
+                x={50 - props.width / 2}
+                y="0"
+                width={props.width}
+                height="100"
+                fill={props.color}
+            />
+        </svg>
+    );
+}
+
+function TopHalfLine(props: LineProps) {
+    return (
+        <svg
+            viewBox="0 0 100 100" // Make it responsive, Origin is Top Left
+            preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="min-w-full max-w-full h-full"
+        >
+            <rect
+                x={50 - props.width / 2}
+                y="0"
+                width={props.width}
+                height="50"
+                fill={props.color}
+            />
+        </svg>
+    );
+}
+
+function BottomHalfLine(props: LineProps) {
+    return (
+        <svg
+            viewBox="0 0 100 100" // Make it responsive, Origin is Top Left
+            preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="min-w-full max-w-full h-full"
+        >
+            <rect
+                x={50 - props.width / 2}
+                y="50"
+                width={props.width}
+                height="50"
+                fill={props.color}
+            />
         </svg>
     );
 }
