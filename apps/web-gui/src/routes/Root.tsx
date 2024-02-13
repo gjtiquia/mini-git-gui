@@ -15,7 +15,7 @@ export function Root() {
 
 type Commits = AppRouterOutput["getAllCommits"];
 
-type CenterType = "None" | "Circle"
+type CenterType = "None" | "Circle" | "RoundedCorner"
 type VerticalLineType = "None" | "Full" | "TopHalf" | "BottomHalf"
 type HorizontalLineType = "None" | "LeftHalf" | "RightHalf"
 
@@ -45,12 +45,12 @@ function CommitsView(props: { commits: Commits }) {
             nodeArray.push({
                 centerType: "Circle",
                 verticalLineType: defaultVerticalLine,
-                horizontalLineType: "RightHalf",
+                horizontalLineType: isFirst ? "None" : "RightHalf",
             });
 
-            if (!isFirstOrLast)
+            if (!isFirst)
                 nodeArray.push({
-                    centerType: "None",
+                    centerType: "RoundedCorner",
                     verticalLineType: "TopHalf",
                     horizontalLineType: "LeftHalf",
                 });
@@ -107,37 +107,43 @@ function CommitsView(props: { commits: Commits }) {
 }
 
 function Node(props: { nodeSettings: NodeSettings }) {
+
+    const strokeWidth = 16;
+
     return (
         <div className="relative min-w-4 max-w-4">
             <div className="absolute top-0 left-0 h-full w-full flex justify-center">
-                <div className="h-full min-w-2 max-w-2 flex flex-col justify-center">
-                    <CenterElement type={props.nodeSettings.centerType} />
+                <div className="h-full min-w-full max-w-full flex flex-col justify-center">
+                    <CenterElement type={props.nodeSettings.centerType} strokeWidth={strokeWidth} />
                 </div>
             </div>
 
             <div className="absolute top-0 left-0 h-full w-full flex justify-center">
-                <div className="h-full min-w-2 max-w-2 flex flex-col justify-center">
-                    <VerticalLineElement type={props.nodeSettings.verticalLineType} />
+                <div className="h-full min-w-full max-w-full flex flex-col justify-center">
+                    <VerticalLineElement type={props.nodeSettings.verticalLineType} strokeWidth={strokeWidth} />
                 </div>
             </div>
 
             <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center">
-                <HorizontalLineElement type={props.nodeSettings.horizontalLineType} />
+                <HorizontalLineElement type={props.nodeSettings.horizontalLineType} strokeWidth={strokeWidth} />
             </div>
         </div>
     )
 }
 
-function CenterElement(props: { type: CenterType }) {
+function CenterElement(props: { type: CenterType, strokeWidth: number }) {
     if (props.type === "Circle")
-        return <Circle />
+        return <Circle radius={28} />
+
+    if (props.type === "RoundedCorner")
+        return <Circle radius={props.strokeWidth / 2} />
 
     return null;
 }
 
-function Circle() {
+function Circle(props: { radius: number }) {
 
-    const radius = 50;
+    const radius = Math.min(props.radius, 50); // Max radius is 50, because view box is 100
     const color = "red";
 
     return (
@@ -151,30 +157,30 @@ function Circle() {
     );
 }
 
-function VerticalLineElement(props: { type: VerticalLineType }) {
+function VerticalLineElement(props: { type: VerticalLineType, strokeWidth: number }) {
 
     if (props.type === "None")
         return null;
 
-    const width = 40;
+    const strokeWidth = props.strokeWidth;
     const color = "red";
 
     let y: number = 0;
-    let height: number = 0;
+    let rectHeight: number = 0;
 
     if (props.type === "Full") {
         y = 0;
-        height = 100;
+        rectHeight = 100;
     }
 
     if (props.type === "TopHalf") {
         y = 0;
-        height = 50;
+        rectHeight = 50;
     }
 
     if (props.type === "BottomHalf") {
         y = 50;
-        height = 50
+        rectHeight = 50
     }
 
     return (
@@ -185,35 +191,35 @@ function VerticalLineElement(props: { type: VerticalLineType }) {
             className="min-w-full max-w-full h-full"
         >
             <rect
-                x={50 - width / 2}
+                x={50 - strokeWidth / 2}
                 y={y}
-                width={width}
-                height={height}
+                width={strokeWidth}
+                height={rectHeight}
                 fill={color}
             />
         </svg>
     );
 }
 
-function HorizontalLineElement(props: { type: HorizontalLineType }) {
+function HorizontalLineElement(props: { type: HorizontalLineType, strokeWidth: number }) {
 
     if (props.type === "None")
         return null;
 
-    const height = 20;
+    const strokeWidth = props.strokeWidth;
     const color = "red";
 
     let x: number = 0;
-    let width: number = 0;
+    let rectWidth: number = 0;
 
     if (props.type === "LeftHalf") {
         x = 0;
-        width = 50;
+        rectWidth = 50;
     }
 
     if (props.type === "RightHalf") {
         x = 50;
-        width = 50
+        rectWidth = 50
     }
 
     return (
@@ -224,9 +230,9 @@ function HorizontalLineElement(props: { type: HorizontalLineType }) {
         >
             <rect
                 x={x}
-                y={50 - height / 2}
-                width={width}
-                height={height}
+                y={50 - strokeWidth / 2}
+                width={rectWidth}
+                height={strokeWidth}
                 fill={color}
             />
         </svg>
