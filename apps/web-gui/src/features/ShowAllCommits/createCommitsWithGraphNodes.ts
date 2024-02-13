@@ -21,6 +21,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         }]
 
     const commitsWithGraphNodes: CommitWithGraphNodes[] = commits.map(commit => ({ ...commit, graphNodes: [] }));
+
     for (let i = 0; i < commitsWithGraphNodes.length; i++) {
         const commitWithGraphNodes = commitsWithGraphNodes[i];
 

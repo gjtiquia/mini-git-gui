@@ -63,4 +63,53 @@ describe("createCommitsWithGraphNodes", () => {
         expect(commitsWithGraphNodes[2].graphNodes[0].verticalLineType).toStrictEqual("TopHalf");
         expect(commitsWithGraphNodes[2].graphNodes[0].horizontalLineType).toStrictEqual("None");
     })
+
+    it.todo("should work with two branches", () => {
+        const commits: Commits = [
+            {
+                ...dummyCommit,
+                hash: "002",
+                parentHashes: ["000"]
+            },
+            {
+                ...dummyCommit,
+                hash: "001",
+                parentHashes: ["000"]
+            },
+            {
+                ...dummyCommit,
+                hash: "000",
+                parentHashes: []
+            },
+        ];
+
+        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+
+        expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(1);
+        expect(commitsWithGraphNodes[0].graphNodes[0].centerType).toStrictEqual("Circle");
+        expect(commitsWithGraphNodes[0].graphNodes[0].verticalLineType).toStrictEqual("BottomHalf");
+        expect(commitsWithGraphNodes[0].graphNodes[0].horizontalLineType).toStrictEqual("None");
+
+
+        expect(commitsWithGraphNodes[1].graphNodes).toHaveLength(2);
+
+        expect(commitsWithGraphNodes[1].graphNodes[0].centerType).toStrictEqual("None");
+        expect(commitsWithGraphNodes[1].graphNodes[0].verticalLineType).toStrictEqual("Full");
+        expect(commitsWithGraphNodes[1].graphNodes[0].horizontalLineType).toStrictEqual("None");
+
+        expect(commitsWithGraphNodes[1].graphNodes[1].centerType).toStrictEqual("Circle");
+        expect(commitsWithGraphNodes[1].graphNodes[1].verticalLineType).toStrictEqual("BottomHalf");
+        expect(commitsWithGraphNodes[1].graphNodes[1].horizontalLineType).toStrictEqual("None");
+
+
+        expect(commitsWithGraphNodes[2].graphNodes).toHaveLength(2);
+
+        expect(commitsWithGraphNodes[2].graphNodes[0].centerType).toStrictEqual("Circle");
+        expect(commitsWithGraphNodes[2].graphNodes[0].verticalLineType).toStrictEqual("TopHalf");
+        expect(commitsWithGraphNodes[2].graphNodes[0].horizontalLineType).toStrictEqual("RightHalf");
+
+        expect(commitsWithGraphNodes[2].graphNodes[1].centerType).toStrictEqual("RoundedCorner");
+        expect(commitsWithGraphNodes[2].graphNodes[1].verticalLineType).toStrictEqual("TopHalf");
+        expect(commitsWithGraphNodes[2].graphNodes[1].horizontalLineType).toStrictEqual("LeftHalf");
+    })
 })
