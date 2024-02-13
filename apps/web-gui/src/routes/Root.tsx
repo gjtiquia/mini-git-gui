@@ -121,42 +121,46 @@ function NodeElement(props: { nodeType: NodeType }) {
 
 function Circle() {
 
+    const radius = 50;
+    const color = "red";
+
     return (
         <svg
             viewBox="0 0 100 100" // Shift origin from top left to center + Make it responsive
             xmlns="http://www.w3.org/2000/svg"
             className="min-w-full max-w-full"
         >
-            <circle cx="50" cy="50" r="50" fill="red" />
+            <circle cx="50" cy="50" r={radius} fill={color} />
         </svg>
     );
 }
 
-interface LineProps {
-    width: number,
-    color: string,
-}
-
 function LineElement(props: { lineType: LineType }) {
 
-    const lineProps: LineProps = {
-        width: 40,
-        color: "red"
+    if (props.lineType === "None")
+        return null;
+
+    const width = 40;
+    const color = "red";
+
+    let y: number = 0;
+    let height: number = 0;
+
+    if (props.lineType === "Full") {
+        y = 0;
+        height = 100;
     }
 
-    if (props.lineType === "Full")
-        return <FullLine {...lineProps} />
+    if (props.lineType === "TopHalf") {
+        y = 0;
+        height = 50;
+    }
 
-    if (props.lineType === "TopHalf")
-        return <TopHalfLine {...lineProps} />
+    if (props.lineType === "BottomHalf") {
+        y = 50;
+        height = 50
+    }
 
-    if (props.lineType === "BottomHalf")
-        return <BottomHalfLine {...lineProps} />
-
-    return null;
-}
-
-function FullLine(props: LineProps) {
     return (
         <svg
             viewBox="0 0 100 100" // Make it responsive
@@ -165,49 +169,11 @@ function FullLine(props: LineProps) {
             className="min-w-full max-w-full h-full"
         >
             <rect
-                x={50 - props.width / 2}
-                y="0"
-                width={props.width}
-                height="100"
-                fill={props.color}
-            />
-        </svg>
-    );
-}
-
-function TopHalfLine(props: LineProps) {
-    return (
-        <svg
-            viewBox="0 0 100 100" // Make it responsive, Origin is Top Left
-            preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="min-w-full max-w-full h-full"
-        >
-            <rect
-                x={50 - props.width / 2}
-                y="0"
-                width={props.width}
-                height="50"
-                fill={props.color}
-            />
-        </svg>
-    );
-}
-
-function BottomHalfLine(props: LineProps) {
-    return (
-        <svg
-            viewBox="0 0 100 100" // Make it responsive, Origin is Top Left
-            preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="min-w-full max-w-full h-full"
-        >
-            <rect
-                x={50 - props.width / 2}
-                y="50"
-                width={props.width}
-                height="50"
-                fill={props.color}
+                x={50 - width / 2}
+                y={y}
+                width={width}
+                height={height}
+                fill={color}
             />
         </svg>
     );
