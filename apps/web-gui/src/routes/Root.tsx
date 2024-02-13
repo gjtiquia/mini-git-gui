@@ -18,7 +18,7 @@ type Commits = AppRouterOutput["getAllCommits"];
 type NodeType = "None" | "Circle"
 type LineType = "None" | "Full" | "Top" | "Bottom"
 
-interface Node {
+interface NodeSettings {
     nodeType: NodeType,
     lineType: LineType
 }
@@ -27,7 +27,7 @@ function CommitsView(props: { commits: Commits }) {
 
     const commitArray = props.commits.map((commit, index) => {
 
-        const nodeArray: Node[] = []
+        const nodeArray: NodeSettings[] = []
 
         const isEven = index % 2 === 0;
         if (isEven) {
@@ -43,7 +43,7 @@ function CommitsView(props: { commits: Commits }) {
             });
 
             nodeArray.push({
-                nodeType: "None",
+                nodeType: "Circle",
                 lineType: "None"
             });
         }
@@ -63,7 +63,7 @@ function CommitsView(props: { commits: Commits }) {
                     <div key={commit.hash} className="flex gap-2 px-2">
 
                         {commit.nodeArray.map((node, nodeIndex) => {
-                            return <NodeElement key={commit.hash + nodeIndex} node={node} />
+                            return <Node key={commit.hash + nodeIndex} nodeSettings={node} />
                         })}
 
                         <div className="flex-grow py-1">
@@ -82,23 +82,25 @@ function CommitsView(props: { commits: Commits }) {
     )
 }
 
-function NodeElement(props: { node: Node }) {
-
-    if (props.node.nodeType === "None")
-        // return <LineElement lineType={props.node.lineType} />
-        return <Circle />
-
+function Node(props: { nodeSettings: NodeSettings }) {
     return (
-        <div className="relative">
-            <div>
-                <Circle />
+        <div className="relative min-w-2 max-w-2">
+            <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center">
+                <NodeElement nodeType={props.nodeSettings.nodeType} />
             </div>
 
-            <div>
-                <LineElement lineType={props.node.lineType} />
+            <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center">
+                <LineElement lineType={props.nodeSettings.lineType} />
             </div>
         </div>
     )
+}
+
+function NodeElement(props: { nodeType: NodeType }) {
+    if (props.nodeType === "Circle")
+        return <Circle />
+
+    return <Empty />
 }
 
 function LineElement(props: { lineType: LineType }) {
@@ -114,7 +116,7 @@ function Circle() {
         <svg
             viewBox="0 0 100 100" // Shift origin from top left to center + Make it responsive
             xmlns="http://www.w3.org/2000/svg"
-            className="min-w-2 max-w-2"
+            className="min-w-full max-w-full"
         >
             <circle cx="50" cy="50" r="50" fill="red" />
         </svg>
@@ -122,15 +124,7 @@ function Circle() {
 }
 
 function Empty() {
-    return (
-        <svg
-            viewBox="0 0 100 100" // Makes it responsive
-            xmlns="http://www.w3.org/2000/svg"
-            className="min-w-2 max-w-2"
-        >
-            {/* Nothing */}
-        </svg>
-    );
+    return null;
 }
 
 function FullLine() {
@@ -139,7 +133,7 @@ function FullLine() {
             viewBox="0 0 100 100" // Make it responsive
             preserveAspectRatio="none" // Stretches and distorts the rect to fill the entire svg
             xmlns="http://www.w3.org/2000/svg"
-            className="min-w-2 max-w-2 h-full"
+            className="min-w-full max-w-full h-full"
         >
             <rect x="25" y="0" width="40" height="100" fill="red" />
         </svg>
