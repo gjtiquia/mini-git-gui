@@ -77,12 +77,12 @@ function CommitsView(props: { commits: Commits }) {
     });
 
     return (
-        <div className="flex flex-col">
+        <div className="px-2 pt-1 flex flex-col">
             {commitArray.map(commit => {
                 const date = new Date(commit.timestamp * 1000);
 
                 return (
-                    <div key={commit.hash} className="flex gap-2 px-2">
+                    <div key={commit.hash} className="flex gap-2">
 
                         <div className="flex">
                             {commit.nodeArray.map((node, nodeIndex) => {
@@ -90,10 +90,10 @@ function CommitsView(props: { commits: Commits }) {
                             })}
                         </div>
 
-                        <div className="flex-grow py-1">
-                            <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
+                        <div className="flex-grow pb-1">
+                            <p className="font-bold text-xs line-clamp-1">{commit.subject}</p>
 
-                            <div className="flex justify-between gap-2 text-xs">
+                            <div className="flex justify-between text-xs">
                                 <p className="line-clamp-1">{commit.author}</p>
                                 <p className="line-clamp-1">{commit.abbreviatedHash}</p>
                                 <p className="line-clamp-1">{date.toLocaleString()}</p>
@@ -111,7 +111,7 @@ function Node(props: { nodeSettings: NodeSettings }) {
     const strokeWidth = 16;
 
     return (
-        <div className="relative min-w-4 max-w-4">
+        <div className="relative min-w-3 max-w-3">
             <div className="absolute top-0 left-0 h-full w-full flex justify-center">
                 <div className="h-full min-w-full max-w-full flex flex-col justify-center">
                     <CenterElement type={props.nodeSettings.centerType} strokeWidth={strokeWidth} />
