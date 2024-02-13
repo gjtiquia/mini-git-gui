@@ -15,12 +15,14 @@ export function Root() {
 
 type Commits = AppRouterOutput["getAllCommits"];
 
-type NodeType = "None" | "Circle"
-type LineType = "None" | "Full" | "TopHalf" | "BottomHalf"
+type CenterType = "None" | "Circle"
+type VerticalLineType = "None" | "Full" | "TopHalf" | "BottomHalf"
+type HorizontalLineType = "None" | "LeftHalf" | "RightHalf"
 
 interface NodeSettings {
-    nodeType: NodeType,
-    lineType: LineType
+    centerType: CenterType,
+    verticalLineType: VerticalLineType,
+    horizontalLineType: HorizontalLineType,
 }
 
 function CommitsView(props: { commits: Commits }) {
@@ -33,34 +35,38 @@ function CommitsView(props: { commits: Commits }) {
         const isLast = index === array.length - 1;
         const isFirstOrLast = isFirst || isLast;
 
-        const line: LineType =
+        const defaultVerticalLine: VerticalLineType =
             isFirst ? "BottomHalf"
                 : isLast ? "TopHalf"
-                    : "Full";
+                    : "Full"
 
         const isEven = index % 2 === 0;
         if (isEven) {
             nodeArray.push({
-                nodeType: "Circle",
-                lineType: line
+                centerType: "Circle",
+                verticalLineType: defaultVerticalLine,
+                horizontalLineType: "RightHalf",
             });
 
             if (!isFirstOrLast)
                 nodeArray.push({
-                    nodeType: "None",
-                    lineType: "TopHalf"
+                    centerType: "None",
+                    verticalLineType: "TopHalf",
+                    horizontalLineType: "LeftHalf",
                 });
         }
         else {
             nodeArray.push({
-                nodeType: isFirstOrLast ? "Circle" : "None",
-                lineType: line
+                centerType: isFirstOrLast ? "Circle" : "None",
+                verticalLineType: defaultVerticalLine,
+                horizontalLineType: "None",
             });
 
             if (!isFirstOrLast)
                 nodeArray.push({
-                    nodeType: "Circle",
-                    lineType: "BottomHalf"
+                    centerType: "Circle",
+                    verticalLineType: "BottomHalf",
+                    horizontalLineType: "None",
                 });
         }
 
@@ -78,9 +84,11 @@ function CommitsView(props: { commits: Commits }) {
                 return (
                     <div key={commit.hash} className="flex gap-2 px-2">
 
-                        {commit.nodeArray.map((node, nodeIndex) => {
-                            return <Node key={commit.hash + nodeIndex} nodeSettings={node} />
-                        })}
+                        <div className="flex">
+                            {commit.nodeArray.map((node, nodeIndex) => {
+                                return <Node key={commit.hash + nodeIndex} nodeSettings={node} />
+                            })}
+                        </div>
 
                         <div className="flex-grow py-1">
                             <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
@@ -100,20 +108,28 @@ function CommitsView(props: { commits: Commits }) {
 
 function Node(props: { nodeSettings: NodeSettings }) {
     return (
-        <div className="relative min-w-2 max-w-2">
-            <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center">
-                <NodeElement nodeType={props.nodeSettings.nodeType} />
+        <div className="relative min-w-4 max-w-4">
+            <div className="absolute top-0 left-0 h-full w-full flex justify-center">
+                <div className="h-full min-w-2 max-w-2 flex flex-col justify-center">
+                    <CenterElement type={props.nodeSettings.centerType} />
+                </div>
+            </div>
+
+            <div className="absolute top-0 left-0 h-full w-full flex justify-center">
+                <div className="h-full min-w-2 max-w-2 flex flex-col justify-center">
+                    <VerticalLineElement type={props.nodeSettings.verticalLineType} />
+                </div>
             </div>
 
             <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center">
-                <LineElement lineType={props.nodeSettings.lineType} />
+                <HorizontalLineElement type={props.nodeSettings.horizontalLineType} />
             </div>
         </div>
     )
 }
 
-function NodeElement(props: { nodeType: NodeType }) {
-    if (props.nodeType === "Circle")
+function CenterElement(props: { type: CenterType }) {
+    if (props.type === "Circle")
         return <Circle />
 
     return null;
@@ -135,9 +151,9 @@ function Circle() {
     );
 }
 
-function LineElement(props: { lineType: LineType }) {
+function VerticalLineElement(props: { type: VerticalLineType }) {
 
-    if (props.lineType === "None")
+    if (props.type === "None")
         return null;
 
     const width = 40;
@@ -146,17 +162,17 @@ function LineElement(props: { lineType: LineType }) {
     let y: number = 0;
     let height: number = 0;
 
-    if (props.lineType === "Full") {
+    if (props.type === "Full") {
         y = 0;
         height = 100;
     }
 
-    if (props.lineType === "TopHalf") {
+    if (props.type === "TopHalf") {
         y = 0;
         height = 50;
     }
 
-    if (props.lineType === "BottomHalf") {
+    if (props.type === "BottomHalf") {
         y = 50;
         height = 50
     }
@@ -171,6 +187,44 @@ function LineElement(props: { lineType: LineType }) {
             <rect
                 x={50 - width / 2}
                 y={y}
+                width={width}
+                height={height}
+                fill={color}
+            />
+        </svg>
+    );
+}
+
+function HorizontalLineElement(props: { type: HorizontalLineType }) {
+
+    if (props.type === "None")
+        return null;
+
+    const height = 20;
+    const color = "red";
+
+    let x: number = 0;
+    let width: number = 0;
+
+    if (props.type === "LeftHalf") {
+        x = 0;
+        width = 50;
+    }
+
+    if (props.type === "RightHalf") {
+        x = 50;
+        width = 50
+    }
+
+    return (
+        <svg
+            viewBox="0 0 100 100" // Make it responsive
+            xmlns="http://www.w3.org/2000/svg"
+            className="min-w-full max-w-full h-full"
+        >
+            <rect
+                x={x}
+                y={50 - height / 2}
                 width={width}
                 height={height}
                 fill={color}
