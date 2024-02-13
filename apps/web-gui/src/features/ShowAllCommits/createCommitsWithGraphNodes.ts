@@ -23,36 +23,53 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
     const commitsWithGraphNodes: CommitWithGraphNodes[] = commits.map(commit => ({ ...commit, graphNodes: [] }));
 
     for (let i = 0; i < commitsWithGraphNodes.length; i++) {
-        const commitWithGraphNodes = commitsWithGraphNodes[i];
+        const commit = commitsWithGraphNodes[i];
 
-        const isFirst = i === 0;
-        const isLast = i === commitsWithGraphNodes.length - 1;
+        // Initial commit
+        if (commit.parentHashes.length === 0)
+            break;
 
-        if (isFirst) {
-            commitWithGraphNodes.graphNodes.push({
+        let circleIndex = commit.graphNodes.findIndex(x => x.centerType === "Circle");
+        if (circleIndex === -1) {
+
+            commit.graphNodes.push({
                 centerType: "Circle",
                 verticalLineType: "BottomHalf",
                 horizontalLineType: "None"
             })
 
-            continue;
+            circleIndex = commit.graphNodes.length - 1;
+        }
+        else {
+            // Is already a parent, should already have a circle and a TopHalf vertical line
+            commit.graphNodes[circleIndex].verticalLineType = "Full"
         }
 
-        if (isLast) {
-            commitWithGraphNodes.graphNodes.push({
-                centerType: "Circle",
-                verticalLineType: "TopHalf",
-                horizontalLineType: "None"
-            })
+        for (let j = i + 1; j < commitsWithGraphNodes.length; j++) {
+            const nextCommit = commitsWithGraphNodes[j];
 
-            continue;
+            while (circleIndex > nextCommit.graphNodes.length - 1) {
+                nextCommit.graphNodes.push({ centerType: "None", verticalLineType: "Full", horizontalLineType: "None" })
+            }
+
+            const isParent = commit.parentHashes.includes(nextCommit.hash);
+            if (!isParent) continue;
+
+            const parentCircleIndex = nextCommit.graphNodes.findIndex(x => x.centerType === "Circle");
+            if (parentCircleIndex === -1) {
+                nextCommit.graphNodes[circleIndex].centerType = "Circle";
+                nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
+            }
+            else {
+                nextCommit.graphNodes[circleIndex].centerType = "RoundedCorner";
+                nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
+                nextCommit.graphNodes[circleIndex].horizontalLineType = "LeftHalf";
+
+                nextCommit.graphNodes[parentCircleIndex].horizontalLineType = "RightHalf";
+            }
+
+            break;
         }
-
-        commitWithGraphNodes.graphNodes.push({
-            centerType: "Circle",
-            verticalLineType: "Full",
-            horizontalLineType: "None"
-        })
     }
 
 
