@@ -16,7 +16,7 @@ export function Root() {
 type Commits = AppRouterOutput["getAllCommits"];
 
 type NodeType = "None" | "Circle"
-type LineType = "None" | "Full" | "Top" | "Bottom"
+type LineType = "None" | "Full" | "TopHalf" | "BottomHalf"
 
 interface NodeSettings {
     nodeType: NodeType,
@@ -70,9 +70,9 @@ function CommitsView(props: { commits: Commits }) {
                             <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
 
                             <div className="flex justify-between gap-2 text-xs">
-                                <p>{commit.author}</p>
-                                <p>{commit.abbreviatedHash}</p>
-                                <p>{date.toLocaleString()}</p>
+                                <p className="line-clamp-1">{commit.author}</p>
+                                <p className="line-clamp-1">{commit.abbreviatedHash}</p>
+                                <p className="line-clamp-1">{date.toLocaleString()}</p>
                             </div>
                         </div>
                     </div>
@@ -100,14 +100,14 @@ function NodeElement(props: { nodeType: NodeType }) {
     if (props.nodeType === "Circle")
         return <Circle />
 
-    return <Empty />
+    return null;
 }
 
 function LineElement(props: { lineType: LineType }) {
     if (props.lineType === "Full")
         return <FullLine />
 
-    return <Empty />
+    return null;
 }
 
 function Circle() {
@@ -121,10 +121,6 @@ function Circle() {
             <circle cx="50" cy="50" r="50" fill="red" />
         </svg>
     );
-}
-
-function Empty() {
-    return null;
 }
 
 function FullLine() {
