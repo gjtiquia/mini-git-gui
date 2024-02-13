@@ -27,7 +27,7 @@ describe("createCommitsWithGraphNodes", () => {
         expect(commitsWithGraphNodes[0].graphNodes[0].horizontalLineType).toStrictEqual("None");
     })
 
-    it.todo("should work with single branch", () => {
+    it("should work with single branch", () => {
         const commits: Commits = [
             {
                 ...dummyCommit,

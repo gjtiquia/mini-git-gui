@@ -1,6 +1,5 @@
 import type { AppRouterOutput } from "../../lib/trpc";
 import { GraphNodeSettings } from "./GraphNode/GraphNode";
-import { VerticalLineType } from "./GraphNode/VerticalLineElement";
 
 export type Commits = AppRouterOutput["getAllCommits"]
 type Commit = Commits[0]
@@ -21,52 +20,40 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
             }]
         }]
 
-    return commits.map((commit, index, array) => {
+    const commitsWithGraphNodes: CommitWithGraphNodes[] = commits.map(commit => ({ ...commit, graphNodes: [] }));
+    for (let i = 0; i < commitsWithGraphNodes.length; i++) {
+        const commitWithGraphNodes = commitsWithGraphNodes[i];
 
-        const graphNodes: GraphNodeSettings[] = [];
+        const isFirst = i === 0;
+        const isLast = i === commitsWithGraphNodes.length - 1;
 
-        const isFirst = index === 0;
-        const isLast = index === array.length - 1;
-        const isFirstOrLast = isFirst || isLast;
-
-        const defaultVerticalLine: VerticalLineType =
-            isFirst ? "BottomHalf"
-                : isLast ? "TopHalf"
-                    : "Full";
-
-        const isEven = index % 2 === 0;
-        if (isEven) {
-            graphNodes.push({
+        if (isFirst) {
+            commitWithGraphNodes.graphNodes.push({
                 centerType: "Circle",
-                verticalLineType: defaultVerticalLine,
-                horizontalLineType: isFirst ? "None" : "RightHalf",
-            });
+                verticalLineType: "BottomHalf",
+                horizontalLineType: "None"
+            })
 
-            if (!isFirst)
-                graphNodes.push({
-                    centerType: "RoundedCorner",
-                    verticalLineType: "TopHalf",
-                    horizontalLineType: "LeftHalf",
-                });
-        }
-        else {
-            graphNodes.push({
-                centerType: isFirstOrLast ? "Circle" : "None",
-                verticalLineType: defaultVerticalLine,
-                horizontalLineType: "None",
-            });
-
-            if (!isFirstOrLast)
-                graphNodes.push({
-                    centerType: "Circle",
-                    verticalLineType: "BottomHalf",
-                    horizontalLineType: "None",
-                });
+            continue;
         }
 
-        return {
-            ...commit,
-            graphNodes
-        };
-    });
+        if (isLast) {
+            commitWithGraphNodes.graphNodes.push({
+                centerType: "Circle",
+                verticalLineType: "TopHalf",
+                horizontalLineType: "None"
+            })
+
+            continue;
+        }
+
+        commitWithGraphNodes.graphNodes.push({
+            centerType: "Circle",
+            verticalLineType: "Full",
+            horizontalLineType: "None"
+        })
+    }
+
+
+    return commitsWithGraphNodes;
 }
