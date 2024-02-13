@@ -1,4 +1,4 @@
-export type HorizontalLineType = "None" | "LeftHalf" | "RightHalf";
+export type HorizontalLineType = "None" | "LeftHalf" | "RightHalf" | "Full";
 export function HorizontalLineElement(props: { type: HorizontalLineType; strokeWidth: number; }) {
 
     if (props.type === "None")
@@ -18,6 +18,11 @@ export function HorizontalLineElement(props: { type: HorizontalLineType; strokeW
     if (props.type === "RightHalf") {
         x = 50;
         rectWidth = 50;
+    }
+
+    if (props.type === "Full") {
+        x = 0;
+        rectWidth = 100;
     }
 
     return (

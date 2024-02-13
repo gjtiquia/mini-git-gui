@@ -1,5 +1,7 @@
 import type { AppRouterOutput } from "../../lib/trpc";
+import { CenterType } from "./GraphNode/CenterElement";
 import { GraphNodeSettings } from "./GraphNode/GraphNode";
+import { HorizontalLineType } from "./GraphNode/HorizontalLineElement";
 
 export type Commits = AppRouterOutput["getAllCommits"]
 type Commit = Commits[0]
@@ -25,54 +27,92 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
     for (let i = 0; i < commitsWithGraphNodes.length; i++) {
         const commit = commitsWithGraphNodes[i];
 
-        // Initial commit
+        // Terminate if has no parents (eg. initial commit)
         if (commit.parentHashes.length === 0)
             break;
 
-        let circleIndex = commit.graphNodes.findIndex(x => x.centerType === "Circle");
-        if (circleIndex !== -1) {
-            // Is already a parent, should already have a circle and a vertical line
+        let startingCircleIndex = commit.graphNodes.findIndex(x => x.centerType === "Circle");
+        if (startingCircleIndex !== -1) {
+            // Is already a parent, should already have a circle and a vertical line, ignore
             continue;
         }
 
-        commit.graphNodes.push({
-            centerType: "Circle",
-            verticalLineType: "BottomHalf",
-            horizontalLineType: "None"
-        })
+        startingCircleIndex = commit.graphNodes.length;
 
-        circleIndex = commit.graphNodes.length - 1;
+        for (let parentIndex = 0; parentIndex < commit.parentHashes.length; parentIndex++) {
 
+            const isFirst = parentIndex === 0;
+            const isLast = parentIndex === commit.parentHashes.length - 1;
+            const hasMoreThanOneParent = commit.parentHashes.length > 1;
 
-        let targetParentHashes = commit.parentHashes;
+            let centerType: CenterType = "None"
+            let horizontalLineType: HorizontalLineType = "None";
+
+            if (isFirst) {
+                centerType = "Circle";
+                horizontalLineType = hasMoreThanOneParent ? "RightHalf" : "None";
+            }
+            else if (isLast) {
+                centerType = "RoundedCorner";
+                horizontalLineType = hasMoreThanOneParent ? "LeftHalf" : "None";
+            }
+            else {
+                centerType = "RoundedCorner";
+                horizontalLineType = "Full";
+            }
+
+            commit.graphNodes.push({
+                centerType,
+                verticalLineType: "BottomHalf",
+                horizontalLineType
+            })
+        }
+
+        const targetParentHashes: (string | null)[] = commit.parentHashes;
 
         for (let j = i + 1; j < commitsWithGraphNodes.length; j++) {
             const nextCommit = commitsWithGraphNodes[j];
 
-            while (circleIndex > nextCommit.graphNodes.length - 1) {
-                nextCommit.graphNodes.push({ centerType: "None", verticalLineType: "Full", horizontalLineType: "None" })
+            for (let targetParentIndex = 0; targetParentIndex < targetParentHashes.length; targetParentIndex++) {
+
+                const targetParentHash = targetParentHashes[targetParentIndex];
+                if (targetParentHash === null) continue;
+
+                const circleIndex = startingCircleIndex + targetParentIndex;
+                while (circleIndex > nextCommit.graphNodes.length - 1) {
+                    nextCommit.graphNodes.push({ centerType: "None", verticalLineType: "Full", horizontalLineType: "None" })
+                }
+
+                const istargetParent = nextCommit.hash === targetParentHash;
+                if (!istargetParent) continue;
+
+                const parentCircleIndex = nextCommit.graphNodes.findIndex(x => x.centerType === "Circle");
+                if (parentCircleIndex !== -1) {
+
+                    nextCommit.graphNodes[circleIndex].centerType = "RoundedCorner";
+                    nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
+                    nextCommit.graphNodes[circleIndex].horizontalLineType = "LeftHalf";
+
+                    nextCommit.graphNodes[parentCircleIndex].horizontalLineType = "RightHalf";
+
+                    targetParentHashes[targetParentIndex] = null;
+                    continue;
+                }
+
+                nextCommit.graphNodes[circleIndex].centerType = "Circle";
+
+                if (nextCommit.parentHashes.length === 0) {
+                    nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
+                    targetParentHashes[targetParentIndex] = null;
+                    continue;
+                }
+
+                targetParentHashes[targetParentIndex] = nextCommit.parentHashes[0];
+                for (let newParentHashIndex = 1; newParentHashIndex < nextCommit.parentHashes.length; newParentHashIndex++) {
+                    const newParentHash = nextCommit.parentHashes[newParentHashIndex];
+                    targetParentHashes.push(newParentHash);
+                }
             }
-
-            const istargetParent = targetParentHashes.includes(nextCommit.hash);
-            if (!istargetParent) continue;
-
-            const parentCircleIndex = nextCommit.graphNodes.findIndex(x => x.centerType === "Circle");
-            if (parentCircleIndex !== -1) {
-
-                nextCommit.graphNodes[circleIndex].centerType = "RoundedCorner";
-                nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
-                nextCommit.graphNodes[circleIndex].horizontalLineType = "LeftHalf";
-
-                nextCommit.graphNodes[parentCircleIndex].horizontalLineType = "RightHalf";
-
-                break;
-            }
-
-            targetParentHashes = nextCommit.parentHashes;
-            nextCommit.graphNodes[circleIndex].centerType = "Circle";
-
-            if (nextCommit.parentHashes.length === 0)
-                nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
         }
     }
 
