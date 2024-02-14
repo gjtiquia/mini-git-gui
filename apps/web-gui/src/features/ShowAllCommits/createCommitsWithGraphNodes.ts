@@ -1,7 +1,5 @@
 import type { AppRouterOutput } from "../../lib/trpc";
-import { CenterType } from "./GraphNode/CenterElement";
 import { GraphNodeSettings } from "./GraphNode/GraphNode";
-import { HorizontalLineType } from "./GraphNode/HorizontalLineElement";
 
 export type Commits = AppRouterOutput["getAllCommits"]
 type Commit = Commits[0]
@@ -26,95 +24,150 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
     // Temporary shifting to remove top commits
     // commitsWithGraphNodes.shift();
+    // commitsWithGraphNodes.shift();
 
-    for (let i = 0; i < commitsWithGraphNodes.length; i++) {
-        const commit = commitsWithGraphNodes[i];
+    for (let commitIndex = 0; commitIndex < commitsWithGraphNodes.length; commitIndex++) {
 
-        // Terminate if has no parents (eg. initial commit)
-        if (commit.parentHashes.length === 0)
-            break;
+        const commit = commitsWithGraphNodes[commitIndex];
 
-        let startingCircleIndex = commit.graphNodes.findIndex(x => x.centerType === "Circle");
-        if (startingCircleIndex !== -1) {
-            // Is already a parent, should already have a circle and a vertical line, ignore
-            continue;
-        }
+        const hasCircle = commit.graphNodes.findIndex(x => x.centerType === "Circle") !== -1;
+        if (hasCircle) continue;
 
-        startingCircleIndex = commit.graphNodes.length;
+        commit.graphNodes.push({
+            centerType: "Circle",
+            verticalLineType: "BottomHalf",
+            horizontalLineType: "None"
+        })
 
-        for (let parentIndex = 0; parentIndex < commit.parentHashes.length; parentIndex++) {
+        let targetCommit = commit;
+        let targetCommitIndex = commitIndex;
 
-            const isFirst = parentIndex === 0;
-            const isLast = parentIndex === commit.parentHashes.length - 1;
-            const hasMoreThanOneParent = commit.parentHashes.length > 1;
+        for (let parentCommitIndex = 0; parentCommitIndex < commit.parentHashes.length; parentCommitIndex++) {
 
-            let centerType: CenterType = "None"
-            let horizontalLineType: HorizontalLineType = "None";
+            let parentCommitHash = commit.parentHashes[parentCommitIndex];
 
-            if (isFirst) {
-                centerType = "Circle";
-                horizontalLineType = hasMoreThanOneParent ? "RightHalf" : "None";
-            }
-            else if (isLast) {
-                centerType = "RoundedCorner";
-                horizontalLineType = hasMoreThanOneParent ? "LeftHalf" : "None";
-            }
-            else {
-                centerType = "RoundedCorner";
-                horizontalLineType = "Full";
-            }
+            for (let nextCommitIndex = commitIndex + 1; nextCommitIndex < commitsWithGraphNodes.length; nextCommitIndex++) {
 
-            commit.graphNodes.push({
-                centerType,
-                verticalLineType: "BottomHalf",
-                horizontalLineType
-            })
-        }
+                const nextCommit = commitsWithGraphNodes[nextCommitIndex];
 
-        const targetParentHashes: (string | null)[] = [...commit.parentHashes]; // Clone the array!
+                const isParentCommit = nextCommit.hash === parentCommitHash;
+                if (!isParentCommit) {
+                    nextCommit.graphNodes.push({
+                        centerType: "None",
+                        verticalLineType: "Full",
+                        horizontalLineType: "None"
+                    })
 
-        for (let j = i + 1; j < commitsWithGraphNodes.length; j++) {
-            const nextCommit = commitsWithGraphNodes[j];
-
-            for (let targetParentIndex = 0; targetParentIndex < targetParentHashes.length; targetParentIndex++) {
-
-                const targetParentHash = targetParentHashes[targetParentIndex];
-                if (targetParentHash === null) continue;
-
-                const circleIndex = startingCircleIndex + targetParentIndex;
-                while (circleIndex > nextCommit.graphNodes.length - 1) {
-                    nextCommit.graphNodes.push({ centerType: "None", verticalLineType: "Full", horizontalLineType: "None" })
+                    continue;
                 }
-
-                const istargetParent = nextCommit.hash === targetParentHash;
-                if (!istargetParent) continue;
 
                 const parentCircleIndex = nextCommit.graphNodes.findIndex(x => x.centerType === "Circle");
-                if (parentCircleIndex !== -1) {
+                const parentHasCircle = parentCircleIndex !== -1;
 
-                    nextCommit.graphNodes[circleIndex].centerType = "RoundedCorner";
-                    nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
-                    nextCommit.graphNodes[circleIndex].horizontalLineType = "LeftHalf";
+                if (parentHasCircle) {
 
-                    nextCommit.graphNodes[parentCircleIndex].horizontalLineType = "RightHalf";
+                    const circleIndex = targetCommit.graphNodes.length - 1;
 
-                    targetParentHashes[targetParentIndex] = null;
-                    continue;
+                    const parentIsOnTheLeft = parentCircleIndex < circleIndex;
+                    const parentIsOnTheRight = parentCircleIndex > circleIndex;
+
+                    let leftIndex = parentCircleIndex;
+                    let rightIndex = circleIndex;
+
+                    if (parentIsOnTheRight) {
+                        leftIndex = circleIndex;
+                        rightIndex = parentCircleIndex;
+                    }
+
+                    const hasMoreThanOneParent = nextCommit.parentHashes.length > 1;
+
+                    if (hasMoreThanOneParent) {
+
+                        // Check if parent has any commits above
+                        let hasCommitAbove = false;
+                        for (let commitAboveParentIndex = nextCommitIndex - 1; commitAboveParentIndex > targetCommitIndex; commitAboveParentIndex--) {
+                            const commitAboveParent = commitsWithGraphNodes[commitAboveParentIndex];
+
+                            if (commitAboveParent.parentHashes.includes(parentCommitHash)) {
+                                hasCommitAbove = true;
+                                break;
+                            }
+                        }
+
+                        // Shortcut
+                        if (!hasCommitAbove) {
+
+                            // Left Index
+                            commit.graphNodes[leftIndex].horizontalLineType = "RightHalf";
+
+                            if (parentIsOnTheLeft)
+                                commit.graphNodes[leftIndex].centerType = "RoundedCorner"
+
+                            // Middle Indexes
+                            for (let middleIndex = leftIndex + 1; middleIndex < rightIndex; middleIndex++) {
+                                commit.graphNodes[middleIndex].horizontalLineType = "Full";
+                                commit.graphNodes[middleIndex].centerType = "RoundedCorner";
+                            }
+
+                            // Right Index
+                            commit.graphNodes[rightIndex].horizontalLineType = "LeftHalf"
+
+                            if (parentIsOnTheRight)
+                                commit.graphNodes[rightIndex].centerType = "RoundedCorner"
+
+                            // Terminate search for parent
+                            break;
+                        }
+                    }
+
+                    if (parentIsOnTheLeft) {
+
+                        // Add empty graph nodes (if missing)
+                        while (rightIndex > nextCommit.graphNodes.length - 1)
+                            nextCommit.graphNodes.push({ centerType: "None", verticalLineType: "None", horizontalLineType: "None" })
+
+                        // Child on the right
+                        nextCommit.graphNodes[rightIndex].centerType = "RoundedCorner";
+                        nextCommit.graphNodes[rightIndex].verticalLineType = "TopHalf";
+                    }
+
+                    if (parentIsOnTheRight) {
+
+                        // Child on the left
+                        nextCommit.graphNodes[leftIndex].centerType = "RoundedCorner";
+                        nextCommit.graphNodes[leftIndex].verticalLineType = "TopHalf";
+                    }
+
+                    // Left Index
+                    nextCommit.graphNodes[leftIndex].horizontalLineType = "RightHalf";
+
+                    // Middle Indexes
+                    for (let middleIndex = leftIndex + 1; middleIndex < rightIndex; middleIndex++) {
+                        nextCommit.graphNodes[middleIndex].centerType = "RoundedCorner";
+                        nextCommit.graphNodes[middleIndex].horizontalLineType = "Full";
+                    }
+
+                    // Right Index
+                    nextCommit.graphNodes[rightIndex].horizontalLineType = "LeftHalf";
+
+                    // Terminate search for parent
+                    break;
                 }
 
-                nextCommit.graphNodes[circleIndex].centerType = "Circle";
+                nextCommit.graphNodes.push({
+                    centerType: "Circle",
+                    verticalLineType: nextCommit.parentHashes.length > 0 ? "Full" : "TopHalf",
+                    horizontalLineType: "None"
+                })
 
                 if (nextCommit.parentHashes.length === 0) {
-                    nextCommit.graphNodes[circleIndex].verticalLineType = "TopHalf";
-                    targetParentHashes[targetParentIndex] = null;
-                    continue;
+                    // Terminate search for parent
+                    break;
                 }
 
-                targetParentHashes[targetParentIndex] = nextCommit.parentHashes[0];
-                for (let newParentHashIndex = 1; newParentHashIndex < nextCommit.parentHashes.length; newParentHashIndex++) {
-                    const newParentHash = nextCommit.parentHashes[newParentHashIndex];
-                    targetParentHashes.push(newParentHash);
-                }
+                targetCommit = nextCommit;
+                targetCommitIndex = nextCommitIndex;
+                parentCommitHash = nextCommit.parentHashes[0];
             }
         }
     }

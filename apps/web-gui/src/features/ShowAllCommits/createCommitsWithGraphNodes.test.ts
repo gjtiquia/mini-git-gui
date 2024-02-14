@@ -492,7 +492,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it.todo("should work with two branches merging - Edge Case 3", () => {
+    it("should work with two branches merging - Edge Case 3", () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
