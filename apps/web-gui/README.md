@@ -1,3 +1,3 @@
 # Mini Git GUI - Web GUI
 
-Frontend Web GUI for Mini Git GUI.
+React Web Frontend GUI for Mini Git GUI. Setup with Vite.
