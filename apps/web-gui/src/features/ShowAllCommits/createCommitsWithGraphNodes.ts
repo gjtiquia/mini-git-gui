@@ -24,6 +24,9 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
     const commitsWithGraphNodes: CommitWithGraphNodes[] = commits.map(commit => ({ ...commit, graphNodes: [] }));
 
+    // Temporary shifting to remove top commits
+    // commitsWithGraphNodes.shift();
+
     for (let i = 0; i < commitsWithGraphNodes.length; i++) {
         const commit = commitsWithGraphNodes[i];
 
