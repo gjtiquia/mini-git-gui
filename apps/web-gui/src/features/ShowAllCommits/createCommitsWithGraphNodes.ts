@@ -68,7 +68,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
             })
         }
 
-        const targetParentHashes: (string | null)[] = commit.parentHashes;
+        const targetParentHashes: (string | null)[] = [...commit.parentHashes]; // Clone the array!
 
         for (let j = i + 1; j < commitsWithGraphNodes.length; j++) {
             const nextCommit = commitsWithGraphNodes[j];

@@ -19,6 +19,8 @@ describe("createCommitsWithGraphNodes", () => {
 
     it("should work with a single commit", () => {
         const commits: Commits = [dummyCommit];
+
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
         const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(1);
@@ -46,6 +48,7 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
         const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(1);
@@ -93,6 +96,7 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
         const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(1);
@@ -169,6 +173,7 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
         const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(1);
@@ -216,6 +221,78 @@ describe("createCommitsWithGraphNodes", () => {
         expect(commitsWithGraphNodes[4].graphNodes[0].horizontalLineType).toStrictEqual("None");
     })
 
+    it("should work with two branches - Edge Case 3", () => {
+        const commits: Commits = [
+            {
+                ...dummyCommit,
+                hash: "010",
+                parentHashes: ["009"]
+            },
+            {
+                ...dummyCommit,
+                hash: "009",
+                parentHashes: ["008"]
+            },
+            {
+                ...dummyCommit,
+                hash: "008",
+                parentHashes: ["006"]
+            },
+            {
+                ...dummyCommit,
+                hash: "007",
+                parentHashes: ["002"]
+            },
+            {
+                ...dummyCommit,
+                hash: "006",
+                parentHashes: ["005"]
+            },
+            {
+                ...dummyCommit,
+                hash: "005",
+                parentHashes: ["004"]
+            },
+            {
+                ...dummyCommit,
+                hash: "004",
+                parentHashes: ["003"]
+            },
+            {
+                ...dummyCommit,
+                hash: "003",
+                parentHashes: ["002"]
+            },
+            {
+                ...dummyCommit,
+                hash: "002",
+                parentHashes: ["001"]
+            },
+            {
+                ...dummyCommit,
+                hash: "001",
+                parentHashes: []
+            },
+        ];
+
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+
+        expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(1);
+
+        expect(commitsWithGraphNodes[0].graphNodes[0].centerType).toStrictEqual("Circle");
+        expect(commitsWithGraphNodes[0].graphNodes[0].verticalLineType).toStrictEqual("BottomHalf");
+        expect(commitsWithGraphNodes[0].graphNodes[0].horizontalLineType).toStrictEqual("None");
+
+
+        expect(commitsWithGraphNodes[1].graphNodes).toHaveLength(1);
+
+        expect(commitsWithGraphNodes[1].graphNodes[0].centerType).toStrictEqual("Circle");
+        expect(commitsWithGraphNodes[1].graphNodes[0].verticalLineType).toStrictEqual("Full");
+        expect(commitsWithGraphNodes[1].graphNodes[0].horizontalLineType).toStrictEqual("None");
+
+    })
+
     it("should work with two branches merging", () => {
         const commits: Commits = [
             {
@@ -240,6 +317,7 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
         const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toHaveLength(2);
