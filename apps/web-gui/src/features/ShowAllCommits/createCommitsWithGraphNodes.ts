@@ -33,12 +33,10 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         const hasCircle = baseCommit.graphNodes.findIndex(x => x.centerType === "Circle") !== -1;
         if (hasCircle) continue;
 
-        const hasMoreThanOneParent = baseCommit.parentHashes.length > 1;
-
         baseCommit.graphNodes.push({
             centerType: "Circle",
             verticalLineType: "BottomHalf",
-            horizontalLineType: hasMoreThanOneParent ? "RightHalf" : "None"
+            horizontalLineType: "None"
         })
 
         let currentCommit = baseCommit;
@@ -49,37 +47,17 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
             const baseCommitParentHash = baseCommit.parentHashes[baseCommitParentIndex];
             let currentCommitParentHash = baseCommitParentHash;
 
-            const isFirst = baseCommitParentIndex === 0;
-            const isLast = baseCommitParentIndex === baseCommit.parentHashes.length - 1;
-
-            // Probably... won't have more than two parents. No need to consider "middle" for now.
-            if (!isFirst && isLast) {
-                baseCommit.graphNodes.push({
-                    centerType: "RoundedCorner",
-                    verticalLineType: "BottomHalf",
-                    horizontalLineType: "LeftHalf"
-                })
-            }
-
             for (let nextCommitIndex = baseCommitIndex + 1; nextCommitIndex < commitsWithGraphNodes.length; nextCommitIndex++) {
 
                 const nextCommit = commitsWithGraphNodes[nextCommitIndex];
 
                 const isParentCommit = nextCommit.hash === currentCommitParentHash;
-                if (!isParentCommit) {
-                    nextCommit.graphNodes.push({
-                        centerType: "None",
-                        verticalLineType: "Full",
-                        horizontalLineType: "None"
-                    })
-
-                    continue;
-                }
+                if (!isParentCommit) continue;
 
                 const parentCommit = nextCommit;
                 const parentIndex = nextCommitIndex;
 
-                const parentCircleIndex = parentCommit.graphNodes.findIndex(x => x.centerType === "Circle");
+                let parentCircleIndex = parentCommit.graphNodes.findIndex(x => x.centerType === "Circle");
                 const parentHasCircle = parentCircleIndex !== -1;
 
                 if (parentHasCircle) {
@@ -171,6 +149,32 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
                     // Right Index
                     parentCommit.graphNodes[rightIndex].horizontalLineType = "LeftHalf";
 
+                    // Draw the missing lines on the way back up
+                    if (parentIsOnTheLeft) {
+                        for (let i = parentIndex; i > baseCommitIndex; i--) {
+                            const commitAboveParent = commitsWithGraphNodes[i];
+
+                            if (rightIndex > commitAboveParent.graphNodes.length - 1) {
+                                commitAboveParent.graphNodes.push({
+                                    centerType: "None",
+                                    verticalLineType: "Full",
+                                    horizontalLineType: "None"
+                                })
+                            }
+                        }
+
+                        // TODO
+                        // baseCommit.graphNodes[leftIndex].horizontalLineType = "RightHalf";
+
+                        // if (rightIndex > baseCommit.graphNodes.length - 1) {
+                        //     baseCommit.graphNodes.push({
+                        //         centerType: "None",
+                        //         verticalLineType: "BottomHalf",
+                        //         horizontalLineType: "LeftHalf"
+                        //     })
+                        // }
+                    }
+
                     // Terminate search for parent
                     break;
                 }
@@ -181,6 +185,21 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
                     verticalLineType: parentCommit.parentHashes.length > 0 ? "Full" : "TopHalf",
                     horizontalLineType: "None"
                 })
+
+                parentCircleIndex = parentCommit.graphNodes.length - 1;
+
+                // Draw the missing lines on the way back up
+                for (let i = parentIndex; i > currentCommitIndex; i--) {
+                    const commitAboveParent = commitsWithGraphNodes[i];
+
+                    if (parentCircleIndex > commitAboveParent.graphNodes.length - 1) {
+                        commitAboveParent.graphNodes.push({
+                            centerType: "None",
+                            verticalLineType: "Full",
+                            horizontalLineType: "None"
+                        })
+                    }
+                }
 
                 if (parentCommit.parentHashes.length === 0) {
                     // Terminate search for parent

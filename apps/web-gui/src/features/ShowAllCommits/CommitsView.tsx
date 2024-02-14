@@ -1,6 +1,6 @@
 import { trpc } from "../../lib/trpc";
 import { GraphNode } from "./GraphNode";
-import { createCommitsWithGraphNodes } from "./createCommitsWithGraphNodes";
+import { Commits, createCommitsWithGraphNodes } from "./createCommitsWithGraphNodes";
 
 export function CommitsView() {
 
@@ -12,7 +12,8 @@ export function CommitsView() {
     if (getCommitsQuery.isError)
         return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
 
-    const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
+    // const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
+    const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
 
     return (
         <div className="px-2 pt-1 flex flex-col">
@@ -45,4 +46,42 @@ export function CommitsView() {
     );
 }
 
+const dummyCommit: Commits[0] = {
+    subject: "xxx",
+    author: "xxx",
+    abbreviatedHash: "123",
+    hash: "123456",
+    parentHashes: [],
+    timestamp: 12345678
+}
+
+// For quickly rendering test cases
+const commits: Commits = [
+    {
+        ...dummyCommit,
+        hash: "003",
+        parentHashes: ["002", "001"]
+    },
+    {
+        ...dummyCommit,
+        hash: "002",
+        parentHashes: ["000"]
+    },
+    {
+        ...dummyCommit,
+        hash: "001",
+        parentHashes: ["000"]
+    },
+    {
+        ...dummyCommit,
+        hash: "000",
+        parentHashes: []
+    },
+];
+
+const dummyCommits: Commits = commits.map(x => ({
+    ...x,
+    subject: x.hash,
+    abbreviatedHash: x.hash
+}))
 
