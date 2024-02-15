@@ -12,8 +12,8 @@ export function CommitsView() {
     if (getCommitsQuery.isError)
         return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
 
-    // const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
-    const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
+    const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
+    // const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
 
     return (
         <div className="px-2 pt-1 flex flex-col">
@@ -84,6 +84,7 @@ const commits: Commits = [
     },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dummyCommits: Commits = commits.map(x => ({
     ...x,
     subject: x.hash,
