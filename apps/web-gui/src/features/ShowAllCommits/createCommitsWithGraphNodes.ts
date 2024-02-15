@@ -102,14 +102,15 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         const topCommitCircleIndex = topCommit.graphNodes.findIndex(x => x.centerType === "Circle");
 
         const isTopCommitToTheRight = topCommitCircleIndex > bottomCommitCircleIndex;
-        const isTopCommitToTheLeft = topCommitIndex < bottomCommitCircleIndex;
+        const isTopCommitToTheLeft = topCommitCircleIndex < bottomCommitCircleIndex;
 
-        const isCurvingFromTheBottom = bottomCommit.graphNodes.length < topCommit.graphNodes.length;
+        let isCurvingFromTheBottom = true;
 
         // ================================ Bottom Commit ================================
 
         if (isTopCommitToTheRight) {
 
+            isCurvingFromTheBottom = bottomCommit.graphNodes.length < topCommit.graphNodes.length;
             if (isCurvingFromTheBottom) {
 
                 // Modify Bottom Commit Horizontal Line
@@ -130,26 +131,30 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         else if (isTopCommitToTheLeft) {
 
-            // Modify Top Commit Horizontal Line
-            const existingTopCommitHorizontalLine = topCommit.graphNodes.slice(-1)[0].horizontalLineType;
-            topCommit.graphNodes.slice(-1)[0].horizontalLineType =
-                existingTopCommitHorizontalLine === "None"
-                    ? "RightHalf"
-                    : "Full"
+            isCurvingFromTheBottom = bottomCommit.graphNodes.length > topCommit.graphNodes.length;
+            if (isCurvingFromTheBottom) {
 
-            // Append Top Commit with new Graph Node
-            topCommit.graphNodes.push({
-                centerType: "RoundedCorner",
-                verticalLineType: "BottomHalf",
-                horizontalLineType: "LeftHalf",
-            })
+                // Modify Top Commit Horizontal Line
+                const existingTopCommitHorizontalLine = topCommit.graphNodes.slice(-1)[0].horizontalLineType;
+                topCommit.graphNodes.slice(-1)[0].horizontalLineType =
+                    existingTopCommitHorizontalLine === "None"
+                        ? "RightHalf"
+                        : "Full"
 
-            // Modify Bottom Commit Vertical Line
-            const existingBottomCommitVerticalLine = bottomCommit.graphNodes.slice(-1)[0].verticalLineType;
-            bottomCommit.graphNodes.slice(-1)[0].verticalLineType =
-                existingBottomCommitVerticalLine === "None"
-                    ? "TopHalf"
-                    : "Full"
+                // Append Top Commit with new Graph Node
+                topCommit.graphNodes.push({
+                    centerType: "RoundedCorner",
+                    verticalLineType: "BottomHalf",
+                    horizontalLineType: "LeftHalf",
+                })
+
+                // Modify Bottom Commit Vertical Line
+                const existingBottomCommitVerticalLine = bottomCommit.graphNodes.slice(-1)[0].verticalLineType;
+                bottomCommit.graphNodes.slice(-1)[0].verticalLineType =
+                    existingBottomCommitVerticalLine === "None"
+                        ? "TopHalf"
+                        : "Full"
+            }
         }
 
         // TopCommit directly above BottomCommit
@@ -173,7 +178,6 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
             const middleCommitHasLessGraphNodesThanBottomCommit = middleCommit.graphNodes.length < bottomCommit.graphNodes.length;
             if (middleCommitHasLessGraphNodesThanBottomCommit) {
-
                 middleCommit.graphNodes.push({
                     centerType: "None",
                     verticalLineType: "Full",
@@ -219,10 +223,31 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         }
 
         else if (isTopCommitToTheLeft) {
-            // Do Nothing
+
+            if (isCurvingFromTheBottom) {
+                // Do Nothing
+            }
+
+            // Curving from the top
+            else {
+
+                // Modify Top Commit Horizontal Line
+                const existingTopCommitLeftHorizontalLine = topCommit.graphNodes[topCommitCircleIndex].horizontalLineType;
+                topCommit.graphNodes[topCommitCircleIndex].horizontalLineType =
+                    existingTopCommitLeftHorizontalLine === "None"
+                        ? "RightHalf"
+                        : "Full"
+
+                const existingTopCommitRightHorizontalLine = topCommit.graphNodes[bottomCommitCircleIndex].horizontalLineType;
+                topCommit.graphNodes[bottomCommitCircleIndex].horizontalLineType =
+                    existingTopCommitRightHorizontalLine === "None"
+                        ? "LeftHalf"
+                        : "Full"
+            }
         }
 
         else {
+
             // Modify Top Commit Vertical Line
             const existingTopCommitVerticalLine = topCommit.graphNodes.slice(-1)[0].verticalLineType;
             topCommit.graphNodes.slice(-1)[0].verticalLineType =
