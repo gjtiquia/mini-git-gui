@@ -90,17 +90,61 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
     function drawLine(bottomCommitIndex: number, topCommitIndex: number) {
 
+        // Assumes that the two commits already have circles
+
         const bottomCommit = allCommits[bottomCommitIndex];
         const topCommit = allCommits[topCommitIndex];
 
         // console.log(`drawLine ${bottomCommit.hash} to ${topCommit.hash}`);
 
-        const existingBottomCommitVerticalLine = bottomCommit.graphNodes.slice(-1)[0].verticalLineType;
-        bottomCommit.graphNodes.slice(-1)[0].verticalLineType =
-            existingBottomCommitVerticalLine === "None"
-                ? "TopHalf"
-                : "Full"
+        const bottomCommitCircleIndex = bottomCommit.graphNodes.findIndex(x => x.centerType === "Circle");
+        const topCommitCircleIndex = topCommit.graphNodes.findIndex(x => x.centerType === "Circle");
 
+        const isTopCommitToTheRight = topCommitCircleIndex > bottomCommitCircleIndex;
+        const isTopCommitToTheLeft = topCommitIndex < bottomCommitCircleIndex;
+
+        if (isTopCommitToTheRight) {
+
+            // Modify Bottom Commit Vertical Line
+            const existingBottomCommitHorizontalLine = bottomCommit.graphNodes.slice(-1)[0].horizontalLineType;
+            bottomCommit.graphNodes.slice(-1)[0].horizontalLineType =
+                existingBottomCommitHorizontalLine === "None"
+                    ? "RightHalf"
+                    : "Full"
+
+            // Append Bottom Commit with new Graph Node
+            bottomCommit.graphNodes.push({
+                centerType: "RoundedCorner",
+                verticalLineType: "TopHalf",
+                horizontalLineType: "LeftHalf",
+            })
+        }
+
+        else if (isTopCommitToTheLeft) {
+            // TODO
+        }
+
+        // TopCommit directly above BottomCommit
+        else {
+            // Modify Bottom Commit Vertical Line
+            const existingBottomCommitVerticalLine = bottomCommit.graphNodes.slice(-1)[0].verticalLineType;
+            bottomCommit.graphNodes.slice(-1)[0].verticalLineType =
+                existingBottomCommitVerticalLine === "None"
+                    ? "TopHalf"
+                    : "Full"
+        }
+
+        // Modify Middle Commits Vertical Line
+        for (let middleCommitIndex = bottomCommitIndex - 1; middleCommitIndex > topCommitIndex; middleCommitIndex--) {
+            const middleCommit = allCommits[middleCommitIndex];
+            middleCommit.graphNodes.push({
+                centerType: "None",
+                verticalLineType: "Full",
+                horizontalLineType: "None",
+            })
+        }
+
+        // Modify Top Commit Vertical Line
         const existingTopCommitVerticalLine = topCommit.graphNodes.slice(-1)[0].verticalLineType;
         topCommit.graphNodes.slice(-1)[0].verticalLineType =
             existingTopCommitVerticalLine === "None"
