@@ -6,7 +6,8 @@ const trpcAppRouter = router({
     getAllCommits: publicProcedure
         .query(async () => {
 
-            const rootDirectory = "../../"
+            const rootDirectory = "../../../mini-git-gui"
+            // const rootDirectory = "../../../mini-text-editor"
 
             const commits = await getAllCommitsAsync(rootDirectory);
             return commits;
