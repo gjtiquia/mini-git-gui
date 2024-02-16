@@ -12,8 +12,8 @@ export function CommitsView() {
     if (getCommitsQuery.isError)
         return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
 
-    const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
-    // const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
+    // const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
+    const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
 
     return (
         <div className="px-2 pt-1 flex flex-col">
@@ -60,22 +60,22 @@ const commits: Commits = [
     {
         ...dummyCommit,
         hash: "006",
-        parentHashes: ["004"]
+        parentHashes: ["003"]
     },
     {
         ...dummyCommit,
         hash: "005",
-        parentHashes: ["002"]
+        parentHashes: ["004"]
     },
     {
         ...dummyCommit,
         hash: "004",
-        parentHashes: ["003", "002"]
+        parentHashes: ["001", "002"]
     },
     {
         ...dummyCommit,
         hash: "003",
-        parentHashes: ["001"]
+        parentHashes: ["002"]
     },
     {
         ...dummyCommit,
@@ -90,7 +90,7 @@ const commits: Commits = [
     {
         ...dummyCommit,
         hash: "000",
-        parentHashes: ["999"]
+        parentHashes: []
     },
 ];
 
