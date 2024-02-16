@@ -89,14 +89,37 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         })
     }
 
+    function setConnected(childCommitIndex: number, parentCommitIndex: number) {
+
+        const childCommit = allCommits[childCommitIndex];
+        const parentCommit = allCommits[parentCommitIndex];
+
+        let newConnectedCommits = connectedCommits.get(childCommit.hash);
+        if (newConnectedCommits === undefined) {
+            newConnectedCommits = [];
+        }
+
+        newConnectedCommits.push(parentCommit.hash);
+        connectedCommits.set(childCommit.hash, newConnectedCommits);
+    }
+
+    function isConnected(childCommitIndex: number, parentCommitIndex: number): boolean {
+        const childCommit = allCommits[childCommitIndex];
+        const parentCommit = allCommits[parentCommitIndex];
+
+        const existingConnectedCommits = connectedCommits.get(childCommit.hash);
+        if (existingConnectedCommits === undefined)
+            return false;
+
+        return existingConnectedCommits.includes(parentCommit.hash);
+    }
+
     function drawLine(bottomCommitIndex: number, topCommitIndex: number) {
 
         // Assumes that the two commits already have circles
 
         const bottomCommit = allCommits[bottomCommitIndex];
         const topCommit = allCommits[topCommitIndex];
-
-        // console.log(`drawLine ${bottomCommit.hash} to ${topCommit.hash}`);
 
         const bottomCommitCircleIndex = bottomCommit.graphNodes.findIndex(x => x.centerType === "Circle");
         const topCommitCircleIndex = topCommit.graphNodes.findIndex(x => x.centerType === "Circle");
@@ -110,8 +133,11 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         if (isTopCommitToTheRight) {
 
-            isCurvingFromTheBottom = bottomCommit.graphNodes.length < topCommit.graphNodes.length;
-            if (isCurvingFromTheBottom) {
+            const bottomHasLessGraphNodesThanTop = bottomCommit.graphNodes.length < topCommit.graphNodes.length;
+
+            isCurvingFromTheBottom = bottomHasLessGraphNodesThanTop;
+
+            if (bottomHasLessGraphNodesThanTop) {
 
                 // Modify Bottom Commit Horizontal Line
                 const existingBottomCommitHorizontalLine = bottomCommit.graphNodes.slice(-1)[0].horizontalLineType;
@@ -131,8 +157,11 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         else if (isTopCommitToTheLeft) {
 
-            isCurvingFromTheBottom = bottomCommit.graphNodes.length > topCommit.graphNodes.length;
-            if (isCurvingFromTheBottom) {
+            const bottomHasMoreGraphNodesThanTop = bottomCommit.graphNodes.length > topCommit.graphNodes.length;
+
+            isCurvingFromTheBottom = bottomHasMoreGraphNodesThanTop;
+
+            if (bottomHasMoreGraphNodesThanTop) {
 
                 // Modify Top Commit Horizontal Line
                 const existingTopCommitHorizontalLine = topCommit.graphNodes.slice(-1)[0].horizontalLineType;
@@ -156,6 +185,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
                         : "Full"
             }
         }
+
 
         // TopCommit directly above BottomCommit
         else {
@@ -257,28 +287,5 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         }
     }
 
-    function setConnected(childCommitIndex: number, parentCommitIndex: number) {
 
-        const childCommit = allCommits[childCommitIndex];
-        const parentCommit = allCommits[parentCommitIndex];
-
-        let newConnectedCommits = connectedCommits.get(childCommit.hash);
-        if (newConnectedCommits === undefined) {
-            newConnectedCommits = [];
-        }
-
-        newConnectedCommits.push(parentCommit.hash);
-        connectedCommits.set(childCommit.hash, newConnectedCommits);
-    }
-
-    function isConnected(childCommitIndex: number, parentCommitIndex: number): boolean {
-        const childCommit = allCommits[childCommitIndex];
-        const parentCommit = allCommits[parentCommitIndex];
-
-        const existingConnectedCommits = connectedCommits.get(childCommit.hash);
-        if (existingConnectedCommits === undefined)
-            return false;
-
-        return existingConnectedCommits.includes(parentCommit.hash);
-    }
 }

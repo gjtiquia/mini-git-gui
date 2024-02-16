@@ -716,7 +716,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work for two branches merging - Edge Case 4", () => {
+    it("should work for two branches merging - Edge Case 5", () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
