@@ -94,7 +94,6 @@ const commits: Commits = [
     },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dummyCommits: Commits = commits.map(x => ({
     ...x,
     subject: x.hash,
