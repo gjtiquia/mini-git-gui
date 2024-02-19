@@ -173,22 +173,22 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
                 // Bottom Commit
                 setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
+
+                return;
             }
 
-            else {
-                const rightmostColumnIndex = getRightmostEmptyColumnIndex(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            const rightmostColumnIndex = getRightmostEmptyColumnIndex(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
 
-                // Top Commit
-                drawLineFromLeftToRight(topCommitIndex, topCommitCircleIndex, rightmostColumnIndex);
-                setVerticalLineAsBottomHalfOrFull(topCommitIndex, rightmostColumnIndex);
+            // Top Commit
+            drawLineFromLeftToRight(topCommitIndex, topCommitCircleIndex, rightmostColumnIndex);
+            setVerticalLineAsBottomHalfOrFull(topCommitIndex, rightmostColumnIndex);
 
-                // Middle Commits
-                drawVericalLineOnEmptyColumn(rightmostColumnIndex, topCommitIndex, bottomCommitIndex);
+            // Middle Commits
+            drawVericalLineOnEmptyColumn(rightmostColumnIndex, topCommitIndex, bottomCommitIndex);
 
-                // Bottom Commit
-                drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
-                setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
-            }
+            // Bottom Commit
+            drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
+            setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
         }
 
         function drawLineToCommitOnTopRight() {
@@ -216,6 +216,19 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
                 drawLineFromLeftToRight(topCommitIndex, bottomCommitCircleIndex, topCommitCircleIndex);
                 return
             }
+
+            const rightmostColumnIndex = getRightmostEmptyColumnIndex(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+
+            // Top Commit
+            drawLineFromLeftToRight(topCommitIndex, topCommitCircleIndex, rightmostColumnIndex);
+            setVerticalLineAsBottomHalfOrFull(topCommitIndex, rightmostColumnIndex);
+
+            // Middle Commits
+            drawVericalLineOnEmptyColumn(rightmostColumnIndex, topCommitIndex, bottomCommitIndex);
+
+            // Bottom Commit
+            drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
+            setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
         }
     }
 
