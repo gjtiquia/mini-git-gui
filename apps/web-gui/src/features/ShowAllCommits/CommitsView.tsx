@@ -66,7 +66,7 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
                 const isLast = index === array.length - 1;
 
-                return <>
+                return (
                     <div key={commit.hash} className="flex gap-2">
 
                         <div className="flex">
@@ -94,14 +94,17 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
                             {commit.refNames.length > 0 &&
                                 <div className="flex gap-1 items-center">
-                                    {refNames.map(refName => (
-                                        <Badge
-                                            className="line-clamp-1"
-                                            variant={commit.isHead ? "default" : "outline"}
-                                        >
-                                            {refName}
-                                        </Badge>
-                                    ))}
+                                    {refNames.map(refName => {
+                                        return (
+                                            <Badge
+                                                key={refName}
+                                                className="line-clamp-1"
+                                                variant={commit.isHead ? "default" : "outline"}
+                                            >
+                                                {refName}
+                                            </Badge>
+                                        )
+                                    })}
                                 </div>
                             }
 
@@ -112,7 +115,7 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
                             }
                         </div>
                     </div>
-                </>;
+                )
             })}
         </div>
     );
