@@ -201,7 +201,7 @@ export async function createCommitsWithGraphNodesAsync(commits: Commits): Promis
 
         function drawLineToCommitOnTopRight() {
 
-            const columnBelowTopCommitIsEmpty = isColumnEmptyBetween(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            const columnBelowTopCommitIsEmpty = isColumnEmptyIncludingBottom(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
             if (columnBelowTopCommitIsEmpty) {
 
                 const rightmostColumnIndex = topCommitCircleIndex;
@@ -253,7 +253,11 @@ export async function createCommitsWithGraphNodesAsync(commits: Commits): Promis
         const leftmostGraphNode = commit.graphNodes[leftmostColumnIndex];
 
         // Left
-        leftmostGraphNode.horizontalLineType = "RightHalf";
+        const existingType = leftmostGraphNode.horizontalLineType;
+        leftmostGraphNode.horizontalLineType =
+            ((existingType === "None") || (existingType === "RightHalf"))
+                ? "RightHalf"
+                : "Full"
 
         // Draw until the right
         for (let columnIndex = leftmostColumnIndex + 1; columnIndex <= rightmostColumnIndex; columnIndex++) {
@@ -266,7 +270,14 @@ export async function createCommitsWithGraphNodesAsync(commits: Commits): Promis
             if (existingCenterType === "None")
                 graphNode.centerType = "RoundedCorner";
 
-            graphNode.horizontalLineType = columnIndex !== rightmostColumnIndex ? "Full" : "LeftHalf";
+            if (columnIndex !== rightmostColumnIndex)
+                graphNode.horizontalLineType = "Full";
+
+            const existingType = graphNode.horizontalLineType;
+            graphNode.horizontalLineType =
+                ((existingType === "None") || (existingType === "LeftHalf"))
+                    ? "LeftHalf"
+                    : "Full"
         }
     }
 
@@ -289,7 +300,7 @@ export async function createCommitsWithGraphNodesAsync(commits: Commits): Promis
 
         const existingType = graphNode.verticalLineType;
         graphNode.verticalLineType =
-            existingType === "None"
+            ((existingType === "None") || (existingType === "TopHalf"))
                 ? "TopHalf"
                 : "Full"
     }
@@ -302,7 +313,7 @@ export async function createCommitsWithGraphNodesAsync(commits: Commits): Promis
 
         const existingType = graphNode.verticalLineType;
         graphNode.verticalLineType =
-            existingType === "None"
+            ((existingType === "None") || (existingType === "BottomHalf"))
                 ? "BottomHalf"
                 : "Full"
     }
@@ -335,6 +346,21 @@ export async function createCommitsWithGraphNodesAsync(commits: Commits): Promis
     function isColumnEmptyBetween(columnIndex: number, topCommitIndex: number, bottomCommitIndex: number) {
 
         for (let commitIndex = topCommitIndex + 1; commitIndex < bottomCommitIndex; commitIndex++) {
+
+            const middleCommit = allCommits[commitIndex];
+
+            const lastIndex = middleCommit.graphNodes.length - 1;
+
+            if (columnIndex <= lastIndex)
+                return false
+        }
+
+        return true;
+    }
+
+    function isColumnEmptyIncludingBottom(columnIndex: number, topCommitIndex: number, bottomCommitIndex: number) {
+
+        for (let commitIndex = topCommitIndex + 1; commitIndex <= bottomCommitIndex; commitIndex++) {
 
             const middleCommit = allCommits[commitIndex];
 

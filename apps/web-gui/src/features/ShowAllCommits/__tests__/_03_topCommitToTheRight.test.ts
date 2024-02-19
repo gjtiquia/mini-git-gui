@@ -68,7 +68,7 @@ describe("Top Commit To The Right", () => {
         ]);
     })
 
-    it("should work left->right shortcut", async () => {
+    it("should work left->right shortcut - Edge Case 1", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -96,6 +96,60 @@ describe("Top Commit To The Right", () => {
         const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[1].graphNodes).toStrictEqual<GraphNodeSettings[]>([
+            {
+                centerType: "RoundedCorner",
+                verticalLineType: "Full",
+                horizontalLineType: "RightHalf"
+            },
+            {
+                centerType: "Circle",
+                verticalLineType: "BottomHalf",
+                horizontalLineType: "LeftHalf"
+            }
+        ]);
+    })
+
+    it("should work left->right shortcut - Edge Case 2", async () => {
+        const commits: Commits = [
+            {
+                ...dummyCommit,
+                hash: "005",
+                parentHashes: ["004",]
+            },
+            {
+                ...dummyCommit,
+                hash: "004",
+                parentHashes: ["002",]
+            },
+
+            {
+                ...dummyCommit,
+                hash: "003",
+                parentHashes: ["001", "002"]
+            },
+
+            {
+                ...dummyCommit,
+                hash: "002",
+                parentHashes: ["000"]
+            },
+            {
+                ...dummyCommit,
+                hash: "001",
+                parentHashes: ["000"]
+            },
+            {
+                ...dummyCommit,
+                hash: "000",
+                parentHashes: []
+            },
+        ];
+
+
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
+
+        expect(commitsWithGraphNodes[2].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
                 centerType: "RoundedCorner",
                 verticalLineType: "Full",
