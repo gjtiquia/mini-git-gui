@@ -24,9 +24,9 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
         queryKey: ["generateGraphNodes"],
         queryFn: async () => {
 
-            const commitsWithGraphNodes = createCommitsWithGraphNodesAsync(props.commits);
+            const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(props.commits);
 
-            // const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
+            // const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(dummyCommits);
             // console.log(commitsWithGraphNodes);
 
             return commitsWithGraphNodes;
