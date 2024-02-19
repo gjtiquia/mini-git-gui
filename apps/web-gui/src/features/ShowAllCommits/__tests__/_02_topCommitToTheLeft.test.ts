@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import type { Commits } from "../createCommitsWithGraphNodes";
-import { createCommitsWithGraphNodes } from "../createCommitsWithGraphNodes";
+import { createCommitsWithGraphNodesAsync } from "../createCommitsWithGraphNodes";
 import type { GraphNodeSettings } from "../GraphNode";
 
 const dummyCommit: Commits[0] = {
@@ -14,7 +14,7 @@ const dummyCommit: Commits[0] = {
 
 describe("Top Commit To The Left", () => {
 
-    it("should work left->right then top->bottom", () => {
+    it("should work left->right then top->bottom", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -38,8 +38,8 @@ describe("Top Commit To The Left", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -68,7 +68,7 @@ describe("Top Commit To The Left", () => {
         ]);
     })
 
-    it("should work left->right then top->bottom then right->left", () => {
+    it("should work left->right then top->bottom then right->left", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -102,8 +102,8 @@ describe("Top Commit To The Left", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[2].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {

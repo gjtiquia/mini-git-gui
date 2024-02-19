@@ -1,21 +1,45 @@
+import { useQuery } from "@tanstack/react-query";
 import { trpc } from "../../lib/trpc";
 import { GraphNode } from "./GraphNode";
-import { Commits, createCommitsWithGraphNodes } from "./createCommitsWithGraphNodes";
+import { Commits, createCommitsWithGraphNodesAsync } from "./createCommitsWithGraphNodes";
 
 export function CommitsView() {
 
     const getCommitsQuery = trpc.getAllCommits.useQuery();
 
     if (getCommitsQuery.isPending)
-        return <p>Loading...</p>
+        return <p>Loading git commits...</p>
 
     if (getCommitsQuery.isError)
         return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
 
-    const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
+    return (
+        <CommitsViewWithGraph commits={getCommitsQuery.data} />
+    );
+}
 
-    // const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
-    // console.log(commitsWithGraphNodes);
+function CommitsViewWithGraph(props: { commits: Commits }) {
+
+    const generateGraphNodesQuery = useQuery({
+        queryKey: ["generateGraphNodes"],
+        queryFn: async () => {
+
+            const commitsWithGraphNodes = createCommitsWithGraphNodesAsync(props.commits);
+
+            // const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
+            // console.log(commitsWithGraphNodes);
+
+            return commitsWithGraphNodes;
+        }
+    })
+
+    if (generateGraphNodesQuery.isPending)
+        return <p>Generating Graph...</p>
+
+    if (generateGraphNodesQuery.isError)
+        return <p className="text-red-500">Error: {generateGraphNodesQuery.error.message}</p>
+
+    const commitsWithGraphNodes = generateGraphNodesQuery.data;
 
     return (
         <div className="px-2 pt-1 flex flex-col">

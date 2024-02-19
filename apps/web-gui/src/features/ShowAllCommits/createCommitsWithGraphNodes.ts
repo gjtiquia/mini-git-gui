@@ -8,7 +8,7 @@ interface CommitWithGraphNodes extends Commit {
     graphNodes: GraphNodeSettings[]
 }
 
-export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNodes[] {
+export async function createCommitsWithGraphNodesAsync(commits: Commits): Promise<CommitWithGraphNodes[]> {
 
     if (commits.length === 1)
         return [{
@@ -123,9 +123,6 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         const bottomCommitCircleIndex = bottomCommit.graphNodes.findIndex(x => x.centerType === "Circle");
         const topCommitCircleIndex = topCommit.graphNodes.findIndex(x => x.centerType === "Circle");
-
-        const bottomCommitCircleGraphNode = bottomCommit.graphNodes[bottomCommitCircleIndex];
-        const topCommitCircleGraphNode = topCommit.graphNodes[topCommitCircleIndex];
 
         const isTopCommitDirectlyAbove = topCommitCircleIndex === bottomCommitCircleIndex;
         const isTopCommitToTheLeft = topCommitCircleIndex < bottomCommitCircleIndex;

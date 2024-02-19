@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import type { Commits } from "../createCommitsWithGraphNodes";
-import { createCommitsWithGraphNodes } from "../createCommitsWithGraphNodes";
+import { createCommitsWithGraphNodesAsync } from "../createCommitsWithGraphNodes";
 import type { GraphNodeSettings } from "../GraphNode";
 
 const dummyCommit: Commits[0] = {
@@ -13,16 +13,16 @@ const dummyCommit: Commits[0] = {
 }
 
 describe("createCommitsWithGraphNodes", () => {
-    it("should work with an empty array", () => {
-        const commitsWithGraphNodes = createCommitsWithGraphNodes([]);
+    it("should work with an empty array", async () => {
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync([]);
         expect(commitsWithGraphNodes).toHaveLength(0);
     })
 
-    it("should work with a single commit", () => {
+    it("should work with a single commit", async () => {
         const commits: Commits = [dummyCommit];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -33,7 +33,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with single branch", () => {
+    it("should work with single branch", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -52,8 +52,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -80,7 +80,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with two branches - Edge Case 1", () => {
+    it("should work with two branches - Edge Case 1", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -109,8 +109,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -168,7 +168,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with two branches - Edge Case 2", () => {
+    it("should work with two branches - Edge Case 2", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -197,8 +197,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -256,7 +256,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with two branches - Edge Case 3", () => {
+    it("should work with two branches - Edge Case 3", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -310,8 +310,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -330,7 +330,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with two branches merging - Edge Case 1", () => {
+    it("should work with two branches merging - Edge Case 1", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -354,8 +354,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -410,7 +410,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with two branches merging - Edge Case 2", () => {
+    it("should work with two branches merging - Edge Case 2", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -434,8 +434,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -492,7 +492,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work with two branches merging - Edge Case 3", () => {
+    it("should work with two branches merging - Edge Case 3", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -521,8 +521,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -586,7 +586,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work for two branches merging - Edge Case 4", () => {
+    it("should work for two branches merging - Edge Case 4", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -625,8 +625,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -716,7 +716,7 @@ describe("createCommitsWithGraphNodes", () => {
         ]);
     })
 
-    it("should work for two branches merging - Edge Case 5", () => {
+    it("should work for two branches merging - Edge Case 5", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -755,8 +755,8 @@ describe("createCommitsWithGraphNodes", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {

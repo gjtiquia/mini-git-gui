@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import type { Commits } from "../createCommitsWithGraphNodes";
-import { createCommitsWithGraphNodes } from "../createCommitsWithGraphNodes";
+import { createCommitsWithGraphNodesAsync } from "../createCommitsWithGraphNodes";
 import type { GraphNodeSettings } from "../GraphNode";
 
 const dummyCommit: Commits[0] = {
@@ -14,7 +14,7 @@ const dummyCommit: Commits[0] = {
 
 describe("Commits Directly Above", () => {
 
-    it("should work with single branch", () => {
+    it("should work with single branch", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -33,8 +33,8 @@ describe("Commits Directly Above", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
@@ -61,7 +61,7 @@ describe("Commits Directly Above", () => {
         ]);
     })
 
-    it("should work with merging branches", () => {
+    it("should work with merging branches", async () => {
         const commits: Commits = [
             {
                 ...dummyCommit,
@@ -80,8 +80,8 @@ describe("Commits Directly Above", () => {
             },
         ];
 
-        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
-        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+        await createCommitsWithGraphNodesAsync(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = await createCommitsWithGraphNodesAsync(commits);
 
         expect(commitsWithGraphNodes[0].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
