@@ -1,6 +1,6 @@
-import { OuterProvider } from "./providers/OuterProvider";
-import { ThemeProvider } from "./providers/ThemeProvider";
-import { Root } from "./routes/Root";
+import { OuterProvider } from "@/providers/OuterProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import { Root } from "@/routes/Root";
 
 function App() {
   return (

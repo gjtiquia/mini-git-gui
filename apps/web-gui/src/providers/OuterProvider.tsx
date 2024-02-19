@@ -1,7 +1,7 @@
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
-import { trpc } from "../lib/trpc";
+import { trpc } from "@/lib/trpc";
 
 const API_URL = "http://localhost:3000";
 

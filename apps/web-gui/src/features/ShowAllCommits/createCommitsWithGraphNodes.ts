@@ -1,5 +1,5 @@
-import type { AppRouterOutput } from "../../lib/trpc";
-import { GraphNodeSettings } from "./GraphNode/GraphNode";
+import type { AppRouterOutput } from "@/lib/trpc";
+import { GraphNodeSettings } from "./GraphNode";
 
 export type Commits = AppRouterOutput["getAllCommits"]
 type Commit = Commits[0]

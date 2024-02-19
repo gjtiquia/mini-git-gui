@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { CommitsView } from "../features/ShowAllCommits";
+import { CommitsView } from "@/features/ShowAllCommits";
 
 export function Root() {
     return (

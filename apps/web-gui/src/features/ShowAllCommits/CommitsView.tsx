@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { trpc } from "../../lib/trpc";
+import { trpc } from "@/lib/trpc";
 import { GraphNode } from "./GraphNode";
 import { Commits, createCommitsWithGraphNodesAsync } from "./createCommitsWithGraphNodes";
 
