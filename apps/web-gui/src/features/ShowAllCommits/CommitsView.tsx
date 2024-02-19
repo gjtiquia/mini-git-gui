@@ -61,23 +61,28 @@ const dummyCommit: Commits[0] = {
 const commits: Commits = [
     {
         ...dummyCommit,
-        hash: "005",
-        parentHashes: ["003"]
+        hash: "006",
+        parentHashes: ["004"]
     },
     {
         ...dummyCommit,
-        hash: "004",
+        hash: "005",
         parentHashes: ["002"]
     },
     {
         ...dummyCommit,
+        hash: "004",
+        parentHashes: ["003", "002"]
+    },
+    {
+        ...dummyCommit,
         hash: "003",
-        parentHashes: ["000", "001"]
+        parentHashes: ["001"]
     },
     {
         ...dummyCommit,
         hash: "002",
-        parentHashes: ["001"]
+        parentHashes: ["000"]
     },
     {
         ...dummyCommit,
@@ -87,9 +92,10 @@ const commits: Commits = [
     {
         ...dummyCommit,
         hash: "000",
-        parentHashes: []
+        parentHashes: ["999"]
     },
 ];
+
 
 const dummyCommits: Commits = commits.map(x => ({
     ...x,

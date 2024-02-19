@@ -213,7 +213,10 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
             const columnAboveBottomCommitHasNoCirclesBetween = !hasCirclesBetween(bottomCommitCircleIndex, topCommitIndex, bottomCommitIndex);
             if (columnAboveBottomCommitHasNoCirclesBetween) {
+
+                topCommit.graphNodes[bottomCommitCircleIndex].centerType = "RoundedCorner"
                 drawLineFromLeftToRight(topCommitIndex, bottomCommitCircleIndex, topCommitCircleIndex);
+
                 return
             }
 

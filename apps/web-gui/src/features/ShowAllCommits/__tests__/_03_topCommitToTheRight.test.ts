@@ -97,7 +97,7 @@ describe("Top Commit To The Right", () => {
 
         expect(commitsWithGraphNodes[1].graphNodes).toStrictEqual<GraphNodeSettings[]>([
             {
-                centerType: "None",
+                centerType: "RoundedCorner",
                 verticalLineType: "Full",
                 horizontalLineType: "RightHalf"
             },
