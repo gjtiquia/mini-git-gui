@@ -124,6 +124,9 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         const bottomCommitCircleIndex = bottomCommit.graphNodes.findIndex(x => x.centerType === "Circle");
         const topCommitCircleIndex = topCommit.graphNodes.findIndex(x => x.centerType === "Circle");
 
+        const bottomCommitCircleGraphNode = bottomCommit.graphNodes[bottomCommitCircleIndex];
+        const topCommitCircleGraphNode = topCommit.graphNodes[topCommitCircleIndex];
+
         const isTopCommitDirectlyAbove = topCommitCircleIndex === bottomCommitCircleIndex;
         const isTopCommitToTheLeft = topCommitCircleIndex < bottomCommitCircleIndex;
         const isTopCommitToTheRight = topCommitCircleIndex > bottomCommitCircleIndex;
@@ -140,45 +143,25 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         function drawLineToCommitAbove() {
 
-            let haveCommitsBetween = false;
-            for (let i = topCommitIndex + 1; i < bottomCommitIndex; i++) {
-                const middleCommit = allCommits[i];
+            const rightmostColumnIndex = getRightmostEmptyColumnIndex(topCommitCircleIndex);
 
-                const lastIndex = middleCommit.graphNodes.length - 1;
-                if (topCommitCircleIndex > lastIndex)
-                    continue;
+            // Top Commit
+            drawLineFromLeftToRight(topCommitIndex, topCommitCircleIndex, rightmostColumnIndex);
+            setVerticalLineAsBottomHalfOrFull(topCommitIndex, rightmostColumnIndex);
 
-                if (middleCommit.graphNodes[topCommitCircleIndex].centerType === "Circle") {
-                    haveCommitsBetween = true;
-                    break;
-                }
+            // Middle Commits
+            for (let middleCommitIndex = topCommitIndex + 1; middleCommitIndex < bottomCommitIndex; middleCommitIndex++) {
+                const middleCommit = allCommits[middleCommitIndex];
+
+                addEmptyGraphNodesUntilColumnIndex(middleCommitIndex, rightmostColumnIndex);
+
+                const graphNode = middleCommit.graphNodes[rightmostColumnIndex];
+                graphNode.verticalLineType = "Full";
             }
 
-            // TODO : commits between handling
-
-            if (!haveCommitsBetween) {
-                const topVerticalType = topCommit.graphNodes[topCommitCircleIndex].verticalLineType;
-                topCommit.graphNodes[topCommitCircleIndex].verticalLineType =
-                    topVerticalType === "None"
-                        ? "BottomHalf"
-                        : "Full"
-
-                const bottomVerticalType = bottomCommit.graphNodes[bottomCommitCircleIndex].verticalLineType;
-                bottomCommit.graphNodes[bottomCommitCircleIndex].verticalLineType =
-                    bottomVerticalType === "None"
-                        ? "TopHalf"
-                        : "Full"
-            }
-
-            // Draw Straight Line
-            for (let i = topCommitIndex + 1; i < bottomCommitIndex; i++) {
-                const middleCommit = allCommits[i];
-                middleCommit.graphNodes.push({
-                    centerType: "None",
-                    verticalLineType: "Full",
-                    horizontalLineType: "None",
-                })
-            }
+            // Bottom Commit
+            drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
+            setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
         }
 
         function drawLineToCommitOnTopLeft() {
@@ -187,6 +170,95 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         function drawLineToCommitOnTopRight() {
 
+        }
+
+        // Utility Functions
+
+        function drawLineFromLeftToRight(commitIndex: number, leftmostColumnIndex: number, rightmostColumnIndex: number) {
+
+            if (rightmostColumnIndex <= leftmostColumnIndex)
+                return;
+
+            const commit = allCommits[commitIndex];
+            const leftmostGraphNode = commit.graphNodes[leftmostColumnIndex];
+
+            // Left
+            leftmostGraphNode.horizontalLineType = "RightHalf";
+
+            // Draw until the right
+            for (let columnIndex = leftmostColumnIndex + 1; columnIndex <= rightmostColumnIndex; columnIndex++) {
+
+                addEmptyGraphNodesUntilColumnIndex(commitIndex, columnIndex);
+
+                const graphNode = commit.graphNodes[columnIndex];
+                graphNode.centerType = "RoundedCorner";
+                graphNode.horizontalLineType = columnIndex !== rightmostColumnIndex ? "Full" : "LeftHalf";
+            }
+        }
+
+        function setVerticalLineAsTopHalfOrFull(commitIndex: number, columnIndex: number) {
+            const commit = allCommits[commitIndex];
+
+            addEmptyGraphNodesUntilColumnIndex(commitIndex, columnIndex);
+            const graphNode = commit.graphNodes[columnIndex];
+
+            const existingType = graphNode.verticalLineType;
+            graphNode.verticalLineType =
+                existingType === "None"
+                    ? "TopHalf"
+                    : "Full"
+        }
+
+        function setVerticalLineAsBottomHalfOrFull(commitIndex: number, columnIndex: number) {
+            const commit = allCommits[commitIndex];
+
+            addEmptyGraphNodesUntilColumnIndex(commitIndex, columnIndex);
+            const graphNode = commit.graphNodes[columnIndex];
+
+            const existingType = graphNode.verticalLineType;
+            graphNode.verticalLineType =
+                existingType === "None"
+                    ? "BottomHalf"
+                    : "Full"
+        }
+
+        function addEmptyGraphNodesUntilColumnIndex(commitIndex: number, columnIndex: number) {
+            const commit = allCommits[commitIndex];
+
+            while (columnIndex > commit.graphNodes.length - 1) {
+                commit.graphNodes.push({
+                    centerType: "None",
+                    verticalLineType: "None",
+                    horizontalLineType: "None",
+                })
+            }
+        }
+
+        function getRightmostEmptyColumnIndex(startingLeftIndex: number) {
+            let columnIndex = startingLeftIndex;
+
+            while (true) {
+                let isColumnEmpty = true;
+
+                for (let commitIndex = topCommitIndex + 1; commitIndex < bottomCommitIndex; commitIndex++) {
+
+                    const middleCommit = allCommits[commitIndex];
+
+                    const lastIndex = middleCommit.graphNodes.length - 1;
+
+                    if (columnIndex <= lastIndex) {
+                        isColumnEmpty = false;
+                        break;
+                    }
+                }
+
+                if (isColumnEmpty)
+                    break;
+
+                columnIndex++;
+            }
+
+            return columnIndex;
         }
     }
 }
