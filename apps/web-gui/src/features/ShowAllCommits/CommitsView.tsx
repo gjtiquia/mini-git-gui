@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { GraphNode } from "./GraphNode";
 import { Commits, createCommitsWithGraphNodesAsync } from "./createCommitsWithGraphNodes";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export function CommitsView() {
 
@@ -46,11 +47,26 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
     return (
         <div className="flex flex-col">
-            {commitsWithGraphNodes.map(commit => {
+            {commitsWithGraphNodes.map((commit, index, array) => {
+
 
                 const commitDate = new Date(commit.timestamp * 1000);
 
-                return (
+                const refNames = commit.refNames.filter((refName, index, array) => {
+
+                    const isRemote = refName.includes("origin/");
+                    if (!isRemote) return true;
+
+                    const localName = refName.replace("origin/", "");
+                    if (array.includes(localName))
+                        return false;
+
+                    return true;
+                });
+
+                const isLast = index === array.length - 1;
+
+                return <>
                     <div key={commit.hash} className="flex gap-2">
 
                         <div className="flex">
@@ -65,7 +81,7 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
                         </div>
 
                         {/* Use the y padding here for space between commits */}
-                        <div className="flex-grow pb-4 flex flex-col gap-1">
+                        <div className="flex-grow pt-1 flex flex-col gap-1">
                             <div className="flex gap-1 flex-wrap">
                                 <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
                             </div>
@@ -78,8 +94,7 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
                             {commit.refNames.length > 0 &&
                                 <div className="flex gap-1 items-center">
-                                    {commit.refNames.map(refName => (
-                                        // <p className="font-bold text-xs line-clamp-1">{refName}</p>
+                                    {refNames.map(refName => (
                                         <Badge
                                             className="line-clamp-1"
                                             variant={commit.isHead ? "default" : "outline"}
@@ -89,9 +104,15 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
                                     ))}
                                 </div>
                             }
+
+                            {!isLast &&
+                                <div className="pt-1">
+                                    <Separator />
+                                </div>
+                            }
                         </div>
                     </div>
-                );
+                </>;
             })}
         </div>
     );
