@@ -176,8 +176,18 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
             }
 
             else {
+                const rightmostColumnIndex = getRightmostEmptyColumnIndex(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+
+                // Top Commit
+                drawLineFromLeftToRight(topCommitIndex, topCommitCircleIndex, rightmostColumnIndex);
+                setVerticalLineAsBottomHalfOrFull(topCommitIndex, rightmostColumnIndex);
+
+                // Middle Commits
+                drawVericalLineOnEmptyColumn(rightmostColumnIndex, topCommitIndex, bottomCommitIndex);
+
                 // Bottom Commit
-                drawLineFromLeftToRight(bottomCommitIndex, topCommitCircleIndex, bottomCommitCircleIndex);
+                drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
+                setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
             }
         }
 
@@ -204,7 +214,11 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
             addEmptyGraphNodesUntilColumnIndex(commitIndex, columnIndex);
 
             const graphNode = commit.graphNodes[columnIndex];
-            graphNode.centerType = "RoundedCorner";
+
+            const existingCenterType = graphNode.centerType;
+            if (existingCenterType === "None")
+                graphNode.centerType = "RoundedCorner";
+
             graphNode.horizontalLineType = columnIndex !== rightmostColumnIndex ? "Full" : "LeftHalf";
         }
     }

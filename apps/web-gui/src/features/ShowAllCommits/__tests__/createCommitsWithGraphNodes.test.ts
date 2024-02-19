@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
-import type { Commits } from "./createCommitsWithGraphNodes";
-import { createCommitsWithGraphNodes } from "./createCommitsWithGraphNodes";
-import type { GraphNodeSettings } from "./GraphNode";
+import type { Commits } from "../createCommitsWithGraphNodes";
+import { createCommitsWithGraphNodes } from "../createCommitsWithGraphNodes";
+import type { GraphNodeSettings } from "../GraphNode";
 
 const dummyCommit: Commits[0] = {
     subject: "xxx",
