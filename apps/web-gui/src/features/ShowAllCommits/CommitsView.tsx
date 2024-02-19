@@ -12,10 +12,10 @@ export function CommitsView() {
     if (getCommitsQuery.isError)
         return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
 
-    // const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
-    const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
+    const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
 
-    console.log(commitsWithGraphNodes);
+    // const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
+    // console.log(commitsWithGraphNodes);
 
     return (
         <div className="px-2 pt-1 flex flex-col">
