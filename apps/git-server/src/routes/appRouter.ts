@@ -10,6 +10,8 @@ const trpcAppRouter = router({
             // const rootDirectory = "../../../mini-text-editor"
 
             const commits = await getAllCommitsAsync(rootDirectory);
+
+            // console.log(commits.slice(0, 5));
             return commits;
         })
 });

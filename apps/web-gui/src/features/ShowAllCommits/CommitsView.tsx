@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { GraphNode } from "./GraphNode";
 import { Commits, createCommitsWithGraphNodesAsync } from "./createCommitsWithGraphNodes";
+import { Badge } from "@/components/ui/badge";
 
 export function CommitsView() {
 
@@ -63,14 +64,31 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
                             })}
                         </div>
 
-                        <div className="flex-grow pb-1">
-                            <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
+                        {/* Use the y padding here for space between commits */}
+                        <div className="flex-grow pb-4 flex flex-col gap-1">
+                            <div className="flex gap-1 flex-wrap">
+                                <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
+                            </div>
 
                             <div className="flex justify-between text-xs">
                                 <p className="line-clamp-1">{commit.author}</p>
                                 <p className="line-clamp-1">{commit.abbreviatedHash}</p>
                                 <p className="line-clamp-1">{commitDate.toLocaleString()}</p>
                             </div>
+
+                            {commit.refNames.length > 0 &&
+                                <div className="flex gap-1 items-center">
+                                    {commit.refNames.map(refName => (
+                                        // <p className="font-bold text-xs line-clamp-1">{refName}</p>
+                                        <Badge
+                                            className="line-clamp-1"
+                                            variant={commit.isHead ? "default" : "outline"}
+                                        >
+                                            {refName}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            }
                         </div>
                     </div>
                 );
@@ -85,7 +103,9 @@ const dummyCommit: Commits[0] = {
     abbreviatedHash: "123",
     hash: "123456",
     parentHashes: [],
-    timestamp: 12345678
+    timestamp: 12345678,
+    refNames: [],
+    isHead: false,
 }
 
 // For quickly rendering test cases

@@ -9,7 +9,9 @@ const dummyCommit: Commits[0] = {
     abbreviatedHash: "123",
     hash: "123456",
     parentHashes: [],
-    timestamp: 12345678
+    timestamp: 12345678,
+    refNames: [],
+    isHead: false,
 }
 
 describe("Top Commit To The Left", () => {

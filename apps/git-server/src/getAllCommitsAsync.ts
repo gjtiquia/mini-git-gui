@@ -9,7 +9,10 @@ interface Commit {
 
     parentHashes: string[],
 
-    timestamp: number
+    timestamp: number,
+
+    refNames: string[],
+    isHead: boolean,
 }
 
 export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
@@ -32,7 +35,7 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
         // format
         // - %x09 = tab character (eg. --pretty=format:%h%x09%an%x09%ad%x09%s)
 
-        const gitLogChildProcess = spawn("git", ["log", "--all", `--pretty=format:%s${delimiter}%an${delimiter}%H${delimiter}%h${delimiter}%P${delimiter}%at${endline}`], {
+        const gitLogChildProcess = spawn("git", ["log", "--all", `--pretty=format:%s${delimiter}%an${delimiter}%H${delimiter}%h${delimiter}%P${delimiter}%at${delimiter}%D${endline}`], {
             cwd: rootDirectory
         });
 
@@ -59,6 +62,23 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
 
                     const timestamp = Number.parseInt(commitArray[5]);
 
+                    let isHead = false;
+
+                    const refNames = commitArray[6]
+                        .split(",")
+                        .filter(x => x.length > 0)
+                        .map(x => x.trim())
+                        .map(x => {
+
+                            const headPrefix = "HEAD -> ";
+                            if (x.includes(headPrefix)) {
+                                isHead = true;
+                                return x.replace(headPrefix, "")
+                            }
+
+                            return x;
+                        })
+
                     return {
                         subject,
                         author,
@@ -68,7 +88,10 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
 
                         parentHashes,
 
-                        timestamp
+                        timestamp,
+
+                        refNames,
+                        isHead,
                     };
                 });
 
