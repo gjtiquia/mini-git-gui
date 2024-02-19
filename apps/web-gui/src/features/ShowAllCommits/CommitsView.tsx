@@ -15,7 +15,7 @@ export function CommitsView() {
     // const commitsWithGraphNodes = createCommitsWithGraphNodes(getCommitsQuery.data);
     const commitsWithGraphNodes = createCommitsWithGraphNodes(dummyCommits);
 
-    // console.log(commitsWithGraphNodes);
+    console.log(commitsWithGraphNodes);
 
     return (
         <div className="px-2 pt-1 flex flex-col">
@@ -61,18 +61,8 @@ const dummyCommit: Commits[0] = {
 const commits: Commits = [
     {
         ...dummyCommit,
-        hash: "005",
-        parentHashes: ["003"]
-    },
-    {
-        ...dummyCommit,
-        hash: "004",
-        parentHashes: ["002"]
-    },
-    {
-        ...dummyCommit,
         hash: "003",
-        parentHashes: ["000", "001"]
+        parentHashes: ["001",]
     },
     {
         ...dummyCommit,

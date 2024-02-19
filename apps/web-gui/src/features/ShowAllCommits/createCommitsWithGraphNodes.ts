@@ -193,6 +193,21 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         function drawLineToCommitOnTopRight() {
 
+            const columnBelowTopCommitIsEmpty = isColumnEmpty(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            if (columnBelowTopCommitIsEmpty) {
+
+                const rightmostColumnIndex = topCommitCircleIndex;
+
+                // Top Commit
+                setVerticalLineAsBottomHalfOrFull(topCommitIndex, rightmostColumnIndex);
+
+                // Middle Commits
+                drawVericalLineOnEmptyColumn(rightmostColumnIndex, topCommitIndex, bottomCommitIndex);
+
+                // Bottom Commit
+                drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
+                setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
+            }
         }
     }
 
