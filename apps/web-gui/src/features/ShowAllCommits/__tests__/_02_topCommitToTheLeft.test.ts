@@ -62,7 +62,7 @@ describe("Top Commit To The Left", () => {
             },
             {
                 centerType: "Circle",
-                verticalLineType: "TopHalf",
+                verticalLineType: "Full",
                 horizontalLineType: "None"
             }
         ]);
@@ -149,7 +149,7 @@ describe("Top Commit To The Left", () => {
             },
             {
                 centerType: "Circle",
-                verticalLineType: "TopHalf",
+                verticalLineType: "Full",
                 horizontalLineType: "RightHalf"
             },
             {
