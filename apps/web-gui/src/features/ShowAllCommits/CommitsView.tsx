@@ -64,7 +64,7 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
                         </div>
 
                         <div className="flex-grow pb-1">
-                            <p className="font-bold text-xs line-clamp-1">{commit.subject}</p>
+                            <p className="font-bold text-sm line-clamp-1">{commit.subject}</p>
 
                             <div className="flex justify-between text-xs">
                                 <p className="line-clamp-1">{commit.author}</p>
