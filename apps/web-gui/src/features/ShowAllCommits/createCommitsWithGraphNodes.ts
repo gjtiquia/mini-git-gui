@@ -159,7 +159,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         function drawLineToCommitOnTopLeft() {
 
-            const columnAboveBottomCommitIsEmpty = isColumnEmpty(bottomCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            const columnAboveBottomCommitIsEmpty = isColumnEmptyBetween(bottomCommitCircleIndex, topCommitIndex, bottomCommitIndex);
             if (columnAboveBottomCommitIsEmpty) {
 
                 const rightmostColumnIndex = bottomCommitCircleIndex;
@@ -193,7 +193,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
         function drawLineToCommitOnTopRight() {
 
-            const columnBelowTopCommitIsEmpty = isColumnEmpty(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            const columnBelowTopCommitIsEmpty = isColumnEmptyBetween(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
             if (columnBelowTopCommitIsEmpty) {
 
                 const rightmostColumnIndex = topCommitCircleIndex;
@@ -207,6 +207,14 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
                 // Bottom Commit
                 drawLineFromLeftToRight(bottomCommitIndex, bottomCommitCircleIndex, rightmostColumnIndex);
                 setVerticalLineAsTopHalfOrFull(bottomCommitIndex, rightmostColumnIndex);
+
+                return;
+            }
+
+            const columnAboveBottomCommitHasNoCirclesBetween = !hasCirclesBetween(bottomCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            if (columnAboveBottomCommitHasNoCirclesBetween) {
+                drawLineFromLeftToRight(topCommitIndex, bottomCommitCircleIndex, topCommitCircleIndex);
+                return
             }
         }
     }
@@ -291,7 +299,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         let columnIndex = startingLeftIndex;
 
         while (true) {
-            if (isColumnEmpty(columnIndex, topCommitIndex, bottomCommitIndex))
+            if (isColumnEmptyBetween(columnIndex, topCommitIndex, bottomCommitIndex))
                 break;
 
             columnIndex++;
@@ -300,8 +308,7 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
         return columnIndex;
     }
 
-    function isColumnEmpty(columnIndex: number, topCommitIndex: number, bottomCommitIndex: number) {
-        let isColumnEmpty = true;
+    function isColumnEmptyBetween(columnIndex: number, topCommitIndex: number, bottomCommitIndex: number) {
 
         for (let commitIndex = topCommitIndex + 1; commitIndex < bottomCommitIndex; commitIndex++) {
 
@@ -309,12 +316,27 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
 
             const lastIndex = middleCommit.graphNodes.length - 1;
 
-            if (columnIndex <= lastIndex) {
-                isColumnEmpty = false;
-                break;
-            }
+            if (columnIndex <= lastIndex)
+                return false
         }
 
-        return isColumnEmpty;
+        return true;
+    }
+
+    function hasCirclesBetween(columnIndex: number, topCommitIndex: number, bottomCommitIndex: number) {
+
+        for (let commitIndex = topCommitIndex + 1; commitIndex < bottomCommitIndex; commitIndex++) {
+
+            const middleCommit = allCommits[commitIndex];
+
+            const lastIndex = middleCommit.graphNodes.length - 1;
+            if (columnIndex > lastIndex)
+                continue;
+
+            if (middleCommit.graphNodes[columnIndex].centerType === "Circle")
+                return true;
+        }
+
+        return false;
     }
 }

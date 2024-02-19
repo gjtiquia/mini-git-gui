@@ -62,12 +62,12 @@ const commits: Commits = [
     {
         ...dummyCommit,
         hash: "003",
-        parentHashes: ["001",]
+        parentHashes: ["000",]
     },
     {
         ...dummyCommit,
         hash: "002",
-        parentHashes: ["001"]
+        parentHashes: ["001", "000"]
     },
     {
         ...dummyCommit,

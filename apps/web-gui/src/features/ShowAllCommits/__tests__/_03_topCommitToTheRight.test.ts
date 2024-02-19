@@ -67,4 +67,45 @@ describe("Top Commit To The Right", () => {
             }
         ]);
     })
+
+    it("should work left->right shortcut", () => {
+        const commits: Commits = [
+            {
+                ...dummyCommit,
+                hash: "003",
+                parentHashes: ["000",]
+            },
+            {
+                ...dummyCommit,
+                hash: "002",
+                parentHashes: ["001", "000"]
+            },
+            {
+                ...dummyCommit,
+                hash: "001",
+                parentHashes: ["000"]
+            },
+            {
+                ...dummyCommit,
+                hash: "000",
+                parentHashes: []
+            },
+        ];
+
+        createCommitsWithGraphNodes(commits); // Mock "Strict Mode", ensuring that the function is pure and does not modify the commit
+        const commitsWithGraphNodes = createCommitsWithGraphNodes(commits);
+
+        expect(commitsWithGraphNodes[1].graphNodes).toStrictEqual<GraphNodeSettings[]>([
+            {
+                centerType: "None",
+                verticalLineType: "Full",
+                horizontalLineType: "RightHalf"
+            },
+            {
+                centerType: "Circle",
+                verticalLineType: "BottomHalf",
+                horizontalLineType: "LeftHalf"
+            }
+        ]);
+    })
 })
