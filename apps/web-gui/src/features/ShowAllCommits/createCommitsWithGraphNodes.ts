@@ -177,6 +177,17 @@ export function createCommitsWithGraphNodes(commits: Commits): CommitWithGraphNo
                 return;
             }
 
+            const columnAboveBottomCommitHasNoCirclesBetween = !hasCirclesBetween(bottomCommitCircleIndex, topCommitIndex, bottomCommitIndex);
+            if (columnAboveBottomCommitHasNoCirclesBetween) {
+
+                const rightmostColumnIndex = bottomCommitCircleIndex;
+
+                // Top Commit
+                drawLineFromLeftToRight(topCommitIndex, topCommitCircleIndex, rightmostColumnIndex);
+
+                return;
+            }
+
             const rightmostColumnIndex = getRightmostEmptyColumnIndex(topCommitCircleIndex, topCommitIndex, bottomCommitIndex);
 
             // Top Commit

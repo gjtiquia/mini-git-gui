@@ -657,7 +657,7 @@ describe("createCommitsWithGraphNodes", () => {
                 horizontalLineType: "RightHalf",
             },
             {
-                centerType: "None",
+                centerType: "RoundedCorner",
                 verticalLineType: "Full",
                 horizontalLineType: "LeftHalf",
             },
