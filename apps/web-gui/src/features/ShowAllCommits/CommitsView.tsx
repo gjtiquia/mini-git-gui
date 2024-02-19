@@ -41,6 +41,8 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
     const commitsWithGraphNodes = generateGraphNodesQuery.data;
 
+    const color = "orange";
+
     return (
         <div className="flex flex-col">
             {commitsWithGraphNodes.map(commit => {
@@ -52,7 +54,12 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
                         <div className="flex">
                             {commit.graphNodes.map((settings, index) => {
-                                return <GraphNode key={commit.hash + index} settings={settings} />;
+                                return (
+                                    <GraphNode
+                                        key={commit.hash + index}
+                                        settings={settings}
+                                        options={{ color }}
+                                    />);
                             })}
                         </div>
 

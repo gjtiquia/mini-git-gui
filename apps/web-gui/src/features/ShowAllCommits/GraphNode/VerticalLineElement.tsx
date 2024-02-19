@@ -1,11 +1,11 @@
 export type VerticalLineType = "None" | "Full" | "TopHalf" | "BottomHalf";
-export function VerticalLineElement(props: { type: VerticalLineType; strokeWidth: number; }) {
+export function VerticalLineElement(props: { type: VerticalLineType, strokeWidth: number, color: string }) {
 
     if (props.type === "None")
         return null;
 
     const strokeWidth = props.strokeWidth;
-    const color = "red";
+    const color = props.color;
 
     let y: number = 0;
     let rectHeight: number = 0;

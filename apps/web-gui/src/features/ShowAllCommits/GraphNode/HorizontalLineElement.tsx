@@ -1,11 +1,11 @@
 export type HorizontalLineType = "None" | "LeftHalf" | "RightHalf" | "Full";
-export function HorizontalLineElement(props: { type: HorizontalLineType; strokeWidth: number; }) {
+export function HorizontalLineElement(props: { type: HorizontalLineType, strokeWidth: number, color: string }) {
 
     if (props.type === "None")
         return null;
 
     const strokeWidth = props.strokeWidth;
-    const color = "red";
+    const color = props.color;
 
     let x: number = 0;
     let rectWidth: number = 0;
