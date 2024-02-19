@@ -1,10 +1,13 @@
 import { OuterProvider } from "./providers/OuterProvider";
+import { ThemeProvider } from "./providers/ThemeProvider";
 import { Root } from "./routes/Root";
 
 function App() {
   return (
     <OuterProvider>
-      <Root />
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Root />
+      </ThemeProvider>
     </OuterProvider>
   )
 }

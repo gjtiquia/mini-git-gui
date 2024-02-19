@@ -42,7 +42,7 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
     const commitsWithGraphNodes = generateGraphNodesQuery.data;
 
     return (
-        <div className="px-2 pt-1 flex flex-col">
+        <div className="flex flex-col">
             {commitsWithGraphNodes.map(commit => {
 
                 const commitDate = new Date(commit.timestamp * 1000);
