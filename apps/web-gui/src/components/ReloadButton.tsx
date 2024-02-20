@@ -12,7 +12,7 @@ export function ReloadButton() {
     }
 
     return (
-        <Button size="icon" onClick={() => reload()}>
+        <Button size="icon" variant={"secondary"} onClick={() => reload()}>
             <RotateCw className="h-[1.2rem] w-[1.2rem]" />
         </Button>
     );

@@ -1,11 +1,18 @@
 import { ModeToggle } from "./ModeToggle";
 import { ReloadButton } from "./ReloadButton";
+import { SidebarToggle } from "./SidebarToggle";
 
 export function Header() {
     return (
-        <div className="flex justify-end gap-2">
-            <ReloadButton />
-            <ModeToggle />
+        <div className="flex justify-between">
+            <div className="flex gap-2">
+                <SidebarToggle />
+            </div>
+
+            <div className="flex gap-2">
+                <ReloadButton />
+                <ModeToggle />
+            </div>
         </div>
     )
 }
