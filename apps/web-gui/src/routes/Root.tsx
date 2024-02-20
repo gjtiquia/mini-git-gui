@@ -3,7 +3,7 @@ import { CommitsView } from "@/features/ShowAllCommits";
 
 export function Root() {
     return (
-        <div className="p-2">
+        <div className="h-dvh flex flex-col">
             <Header />
             <CommitsView />
         </div>

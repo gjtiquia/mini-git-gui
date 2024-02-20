@@ -4,7 +4,7 @@ import { SidebarToggle } from "./SidebarToggle";
 
 export function Header() {
     return (
-        <div className="flex justify-between">
+        <div className="p-2 flex justify-between">
             <div className="flex gap-2">
                 <SidebarToggle />
             </div>

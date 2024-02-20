@@ -17,7 +17,9 @@ export function CommitsView() {
         return <p className="text-red-500 text-center">Error: {getCommitsQuery.error.message}</p>
 
     return (
-        <CommitsViewWithGraph commits={getCommitsQuery.data} />
+        <div className="overflow-y-scroll border rounded-md px-2 pb-2">
+            <CommitsViewWithGraph commits={getCommitsQuery.data} />
+        </div>
     );
 }
 
