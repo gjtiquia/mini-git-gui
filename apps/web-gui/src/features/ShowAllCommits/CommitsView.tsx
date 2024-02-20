@@ -54,8 +54,13 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
                 const refNames = commit.refNames.filter((refName, index, array) => {
 
+                    const isRemoteHead = refName === "origin/HEAD"
+                    if (isRemoteHead)
+                        return false;
+
                     const isRemote = refName.includes("origin/");
-                    if (!isRemote) return true;
+                    if (!isRemote)
+                        return true;
 
                     const localName = refName.replace("origin/", "");
                     if (array.includes(localName))
