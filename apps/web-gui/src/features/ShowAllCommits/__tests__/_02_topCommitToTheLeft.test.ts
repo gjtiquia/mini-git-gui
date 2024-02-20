@@ -2,17 +2,7 @@ import { describe, it, expect } from "vitest"
 import type { Commits } from "../createCommitsWithGraphNodes";
 import { createCommitsWithGraphNodesAsync } from "../createCommitsWithGraphNodes";
 import type { GraphNodeSettings } from "../GraphNode";
-
-const dummyCommit: Commits[0] = {
-    subject: "xxx",
-    author: "xxx",
-    abbreviatedHash: "123",
-    hash: "123456",
-    parentHashes: [],
-    timestamp: 12345678,
-    refNames: [],
-    isHead: false,
-}
+import { dummyCommit } from "../dummyCommits";
 
 describe("Top Commit To The Left", () => {
 

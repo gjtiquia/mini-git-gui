@@ -4,6 +4,7 @@ import { GraphNode } from "./GraphNode";
 import { Commits, createCommitsWithGraphNodesAsync } from "./createCommitsWithGraphNodes";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { dummyCommits } from "./dummyCommits";
 
 export function CommitsView() {
 
@@ -52,18 +53,19 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
 
                 const commitDate = new Date(commit.timestamp * 1000);
 
-                const refNames = commit.refNames.filter((refName, index, array) => {
+                const references = commit.references.filter((reference, index, array) => {
 
-                    const isRemoteHead = refName === "origin/HEAD"
+                    const isRemoteHead = reference.name === "origin/HEAD"
                     if (isRemoteHead)
                         return false;
 
-                    const isRemote = refName.includes("origin/");
+                    const isRemote = reference.name.includes("origin/");
                     if (!isRemote)
                         return true;
 
-                    const localName = refName.replace("origin/", "");
-                    if (array.includes(localName))
+                    const localName = reference.name.replace("origin/", "");
+                    const alreadyHaveLocalBranchWithSameName = array.findIndex(x => x.name === localName);
+                    if (alreadyHaveLocalBranchWithSameName)
                         return false;
 
                     return true;
@@ -97,16 +99,16 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
                                 <p className="line-clamp-1">{commitDate.toLocaleString()}</p>
                             </div>
 
-                            {commit.refNames.length > 0 &&
+                            {commit.references.length > 0 &&
                                 <div className="flex gap-1 items-center">
-                                    {refNames.map(refName => {
+                                    {references.map(ref => {
                                         return (
                                             <Badge
-                                                key={refName}
+                                                key={ref.name}
                                                 className="line-clamp-1"
-                                                variant={commit.isHead ? "default" : "outline"}
+                                                variant={ref.isHead ? "default" : "outline"}
                                             >
-                                                {refName}
+                                                {ref.name}
                                             </Badge>
                                         )
                                     })}
@@ -125,58 +127,3 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
         </div>
     );
 }
-
-const dummyCommit: Commits[0] = {
-    subject: "xxx",
-    author: "xxx",
-    abbreviatedHash: "123",
-    hash: "123456",
-    parentHashes: [],
-    timestamp: 12345678,
-    refNames: [],
-    isHead: false,
-}
-
-// For quickly rendering test cases
-const commits: Commits = [
-    {
-        ...dummyCommit,
-        hash: "005",
-        parentHashes: ["004",]
-    },
-    {
-        ...dummyCommit,
-        hash: "004",
-        parentHashes: ["002",]
-    },
-
-    {
-        ...dummyCommit,
-        hash: "003",
-        parentHashes: ["001", "002"]
-    },
-
-    {
-        ...dummyCommit,
-        hash: "002",
-        parentHashes: ["000"]
-    },
-    {
-        ...dummyCommit,
-        hash: "001",
-        parentHashes: ["000"]
-    },
-    {
-        ...dummyCommit,
-        hash: "000",
-        parentHashes: []
-    },
-];
-
-
-const dummyCommits: Commits = commits.map(x => ({
-    ...x,
-    subject: x.hash,
-    abbreviatedHash: x.hash
-}))
-

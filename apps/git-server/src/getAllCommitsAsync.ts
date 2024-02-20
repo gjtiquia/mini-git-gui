@@ -11,7 +11,11 @@ interface Commit {
 
     timestamp: number,
 
-    refNames: string[],
+    references: Reference[],
+}
+
+interface Reference {
+    name: string,
     isHead: boolean,
 }
 
@@ -62,21 +66,26 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
 
                     const timestamp = Number.parseInt(commitArray[5]);
 
-                    let isHead = false;
 
-                    const refNames = commitArray[6]
+                    const references = commitArray[6]
                         .split(",")
                         .filter(x => x.length > 0)
                         .map(x => x.trim())
                         .map(x => {
 
+                            let isHead = false;
+                            let name = x;
+
                             const headPrefix = "HEAD -> ";
                             if (x.includes(headPrefix)) {
                                 isHead = true;
-                                return x.replace(headPrefix, "")
+                                name = x.replace(headPrefix, "")
                             }
 
-                            return x;
+                            return {
+                                name,
+                                isHead,
+                            }
                         })
 
                     return {
@@ -90,8 +99,7 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
 
                         timestamp,
 
-                        refNames,
-                        isHead,
+                        references,
                     };
                 });
 
