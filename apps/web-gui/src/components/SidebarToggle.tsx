@@ -23,9 +23,15 @@ export function SidebarToggle() {
 
                 <ul className="list-disc">
                     <li className="bg-muted">
-                        <p className="px-8 py-2">
+                        <button className="text-start px-8 py-2 w-full">
                             All Commits
-                        </p>
+                        </button>
+                    </li>
+
+                    <li className={"hover:bg-muted/35"}>
+                        <button className="text-start px-8 py-2 w-full">
+                            Local Changes
+                        </button>
                     </li>
                 </ul>
             </SheetContent>
