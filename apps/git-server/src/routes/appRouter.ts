@@ -11,6 +11,7 @@ const trpcAppRouter = router({
 
             const commits = await getAllCommitsAsync(rootDirectory);
 
+            // console.log(Date.now() + " getAllCommits")
             // console.log(commits.slice(0, 5));
             return commits;
         })

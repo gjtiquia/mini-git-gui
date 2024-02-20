@@ -10,11 +10,11 @@ export function CommitsView() {
 
     const getCommitsQuery = trpc.getAllCommits.useQuery();
 
-    if (getCommitsQuery.isPending)
-        return <p>Loading git commits...</p>
+    if (getCommitsQuery.isPending || getCommitsQuery.isFetching)
+        return <p className="text-center">Loading git commits...</p>
 
     if (getCommitsQuery.isError)
-        return <p className="text-red-500">Error: {getCommitsQuery.error.message}</p>
+        return <p className="text-red-500 text-center">Error: {getCommitsQuery.error.message}</p>
 
     return (
         <CommitsViewWithGraph commits={getCommitsQuery.data} />
@@ -36,11 +36,11 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
         }
     })
 
-    if (generateGraphNodesQuery.isPending)
-        return <p>Generating Graph...</p>
+    if (generateGraphNodesQuery.isPending || generateGraphNodesQuery.isFetching)
+        return <p className="text-center">Generating Graph...</p>
 
     if (generateGraphNodesQuery.isError)
-        return <p className="text-red-500">Error: {generateGraphNodesQuery.error.message}</p>
+        return <p className="text-red-500 text-center">Error: {generateGraphNodesQuery.error.message}</p>
 
     const commitsWithGraphNodes = generateGraphNodesQuery.data;
 
@@ -50,21 +50,20 @@ function CommitsViewWithGraph(props: { commits: Commits }) {
         <div className="flex flex-col">
             {commitsWithGraphNodes.map((commit, index, array) => {
 
-
                 const commitDate = new Date(commit.timestamp * 1000);
 
-                const references = commit.references.filter((reference, index, array) => {
+                const references = commit.references.filter((ref, index, array) => {
 
-                    const isRemoteHead = reference.name === "origin/HEAD"
+                    const isRemoteHead = ref.name === "origin/HEAD"
                     if (isRemoteHead)
                         return false;
 
-                    const isRemote = reference.name.includes("origin/");
+                    const isRemote = ref.name.includes("origin/");
                     if (!isRemote)
                         return true;
 
-                    const localName = reference.name.replace("origin/", "");
-                    const alreadyHaveLocalBranchWithSameName = array.findIndex(x => x.name === localName);
+                    const localName = ref.name.replace("origin/", "");
+                    const alreadyHaveLocalBranchWithSameName = array.findIndex(x => x.name === localName) !== -1;
                     if (alreadyHaveLocalBranchWithSameName)
                         return false;
 
