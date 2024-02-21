@@ -6,10 +6,20 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
+import { useState } from "react";
 
 export function SidebarToggle() {
+
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    function navigateTo() {
+        // TODO : nav to page
+
+        setIsSidebarOpen(false);
+    }
+
     return (
-        <Sheet>
+        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
                 <Button size={"icon"} variant={"ghost"}>
                     <Menu className="h-[1.2rem] w-[1.2rem]" />
@@ -23,13 +33,19 @@ export function SidebarToggle() {
 
                 <ul className="list-disc">
                     <li className="bg-muted">
-                        <button className="text-start px-8 py-2 w-full">
+                        <button
+                            className="text-start px-8 py-2 w-full"
+                            onClick={() => navigateTo()}
+                        >
                             All Commits
                         </button>
                     </li>
 
                     <li className={"hover:bg-muted/35"}>
-                        <button className="text-start px-8 py-2 w-full">
+                        <button
+                            className="text-start px-8 py-2 w-full"
+                            onClick={() => navigateTo()}
+                        >
                             Local Changes
                         </button>
                     </li>
