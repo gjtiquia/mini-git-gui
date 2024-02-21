@@ -10,7 +10,7 @@ export function LocalChangesView() {
     const [tab, setTab] = useState<Tab>("Unstaged")
 
     return (
-        <div className="h-full px-2 pb-2 flex flex-col gap-2">
+        <div className="h-full p-2 flex flex-col gap-2 border-t rounded-md">
             <TabBar tab={tab} setTab={setTab} />
             <Separator />
             <TabView tab={tab} />
