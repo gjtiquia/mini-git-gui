@@ -5,16 +5,20 @@ import {
     SheetTrigger
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import { Menu } from "lucide-react";
 import { useState } from "react";
+import { ExtractAtomValue, useAtom } from "jotai";
+import { Menu } from "lucide-react";
+import { pageAtom } from "@/lib/atoms";
+
+type InferredPage = ExtractAtomValue<typeof pageAtom>;
 
 export function SidebarToggle() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [page, setPage] = useAtom(pageAtom);
 
-    function navigateTo() {
-        // TODO : nav to page
-
+    function navigateTo(toPage: InferredPage) {
+        setPage(toPage);
         setIsSidebarOpen(false);
     }
 
@@ -32,25 +36,34 @@ export function SidebarToggle() {
                 </SheetHeader>
 
                 <ul className="list-disc">
-                    <li className="bg-muted">
-                        <button
-                            className="text-start px-8 py-2 w-full"
-                            onClick={() => navigateTo()}
-                        >
-                            All Commits
-                        </button>
-                    </li>
+                    <NavLink
+                        title="All Commits"
+                        page={page}
+                        targetPage="AllCommits"
+                        navigateTo={navigateTo}
+                    />
 
-                    <li className={"hover:bg-muted/35"}>
-                        <button
-                            className="text-start px-8 py-2 w-full"
-                            onClick={() => navigateTo()}
-                        >
-                            Local Changes
-                        </button>
-                    </li>
+                    <NavLink
+                        title="Local Changes"
+                        page={page}
+                        targetPage="LocalChanges"
+                        navigateTo={navigateTo}
+                    />
                 </ul>
             </SheetContent>
         </Sheet>
     );
+}
+
+function NavLink(props: { title: string, page: InferredPage, targetPage: InferredPage, navigateTo: (page: InferredPage) => void }) {
+    return (
+        <li className={props.page === props.targetPage ? "bg-muted" : "hover:bg-muted/35"}>
+            <button
+                className="text-start px-8 py-2 w-full"
+                onClick={() => props.navigateTo(props.targetPage)}
+            >
+                {props.title}
+            </button>
+        </li>
+    )
 }
