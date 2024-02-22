@@ -1,4 +1,15 @@
 import { spawn } from "child_process";
+import { delimiter, endline } from "./utils";
+
+/* References
+- https://git-scm.com/docs/git-log#_commit_formatting
+- https://git-scm.com/docs/git-log#_pretty_formats
+
+--all: show branches as well
+
+format
+- %x09 = tab character (eg. --pretty=format:%h%x09%an%x09%ad%x09%s)
+*/
 
 interface Commit {
     subject: string,
@@ -26,25 +37,12 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
         const commitArray: Commit[] = [];
         let error = "";
 
-        // Use these weird delimiters instead of just newline characters in-case of edge cases where those characters exist in the output
-        const delimiter = ">>>MINI-GIT-GUI-DELIMITER<<<";
-        const endline = ">>>MINI-GIT-GUI-ENDLINE<<<";
-
-        // Reference: 
-        // - https://git-scm.com/docs/git-log#_commit_formatting
-        // - https://git-scm.com/docs/git-log#_pretty_formats
-
-        // --all: show branches as well
-
-        // format
-        // - %x09 = tab character (eg. --pretty=format:%h%x09%an%x09%ad%x09%s)
-
-        const gitLogChildProcess = spawn("git", ["log", "--all", `--pretty=format:%s${delimiter}%an${delimiter}%H${delimiter}%h${delimiter}%P${delimiter}%at${delimiter}%D${endline}`], {
+        const gitLog = spawn("git", ["log", "--all", `--pretty=format:%s${delimiter}%an${delimiter}%H${delimiter}%h${delimiter}%P${delimiter}%at${delimiter}%D${endline}`], {
             cwd: rootDirectory
         });
 
-        // Note: this gets called multiple times before process exit
-        gitLogChildProcess.stdout.on('data', (data) => {
+        // Note: this may get called multiple times before process exit
+        gitLog.stdout.on('data', (data) => {
 
             const rawData: string = data.toString();
 
@@ -65,7 +63,6 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
                     const parentHashes = commitArray[4].split(" ").filter(x => x.length > 0);
 
                     const timestamp = Number.parseInt(commitArray[5]);
-
 
                     const references = commitArray[6]
                         .split(",")
@@ -106,11 +103,11 @@ export function getAllCommitsAsync(rootDirectory: string): Promise<Commit[]> {
             commitArray.push(...formattedArray);
         });
 
-        gitLogChildProcess.stderr.on('data', (data) => {
-            error = `${data}`;
+        gitLog.stderr.on('data', (data) => {
+            error += `${data} `;
         });
 
-        gitLogChildProcess.on('exit', (code, signal) => {
+        gitLog.on('exit', (code, signal) => {
             if (code === 1) {
                 reject(`Child process exited with code ${code} and signal ${signal}, Error: ${error}`);
                 return;

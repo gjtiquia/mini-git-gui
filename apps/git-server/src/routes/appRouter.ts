@@ -1,20 +1,9 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { createContext, publicProcedure, router } from "../lib/trpc";
-import { getAllCommitsAsync } from '../getAllCommitsAsync';
+import { createContext, router } from "../lib/trpc";
+import { getAllCommitsProcedure } from './getAllCommitsProcedure';
 
 const trpcAppRouter = router({
-    getAllCommits: publicProcedure
-        .query(async () => {
-
-            const rootDirectory = "../../../mini-git-gui"
-            // const rootDirectory = "../../../mini-text-editor"
-
-            const commits = await getAllCommitsAsync(rootDirectory);
-
-            // console.log(Date.now() + " getAllCommits")
-            // console.log(commits.slice(0, 5));
-            return commits;
-        })
+    getAllCommits: getAllCommitsProcedure()
 });
 
 // export type definition of API

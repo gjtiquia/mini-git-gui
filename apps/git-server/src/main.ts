@@ -17,3 +17,8 @@ app.listen(PORT, () => {
     console.log(`Server is running at: http://localhost:${PORT}`);
     console.log('Press Ctrl+C to quit.');
 });
+
+// For quick tests
+// import { rootDirectory } from "./store";
+// import { getStatusAsync } from "./features/getStatus";
+// getStatusAsync(rootDirectory)
