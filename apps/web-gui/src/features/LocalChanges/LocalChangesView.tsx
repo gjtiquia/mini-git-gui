@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { UnstagedView } from "./UnstagedView";
 import { StagedView } from "./StagedView";
-import { AppRouterOutput, trpc } from "@/lib/trpc";
+import { trpc } from "@/lib/trpc";
 
 type Tab = "Unstaged" | "Staged"
 
