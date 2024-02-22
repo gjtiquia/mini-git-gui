@@ -47,6 +47,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
             cwd: rootDirectory
         });
 
+        // Note: this may get called multiple times before process exit
         gitStatus.stdout.on('data', (data) => {
             const rawData: string = data.toString();
 
@@ -63,15 +64,15 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 })
 
 
-            unstagedFiles = allFiles
-                .filter(e => e.Y !== ' ')
+            const partialUnstagedFiles = allFiles
+                .filter(e => e.Y !== ' ') // Ignore unmodified files
                 .map(e => {
                     return {
                         code: e.Y,
                         path: e.path
                     }
                 })
-                .filter(e => e.code in codeStatusMap)
+                .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
                 .map(e => {
                     return {
                         status: codeStatusMap[e.code],
@@ -79,21 +80,28 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                     }
                 })
 
-            stagedFiles = allFiles
-                .filter(e => e.X !== ' ')
+            const partialStagedFiles = allFiles
+                .filter(e => e.X !== ' ') // Ignore unmodified files
                 .map(e => {
                     return {
-                        code: e.Y,
+                        code: e.X,
                         path: e.path
                     }
                 })
-                .filter(e => e.code in codeStatusMap)
+                .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
                 .map(e => {
                     return {
                         status: codeStatusMap[e.code],
                         path: e.path
                     }
                 })
+
+            // console.log("allFiles:", allFiles)
+            // console.log("partialUnstagedFiles:", partialUnstagedFiles)
+            // console.log("partialStagedFiles:", partialStagedFiles)
+
+            unstagedFiles.push(...partialUnstagedFiles);
+            stagedFiles.push(...partialStagedFiles);
         })
 
         // Note: this may get called multiple times before process exit
@@ -112,6 +120,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 stagedFiles,
             }
 
+            // console.log("workingTreeStatus:", workingTreeStatus);
             resolve(workingTreeStatus);
         });
     })

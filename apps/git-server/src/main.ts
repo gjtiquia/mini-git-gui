@@ -21,4 +21,8 @@ app.listen(PORT, () => {
 // For quick tests
 // import { rootDirectory } from "./store";
 // import { getStatusAsync } from "./features/getStatus";
-// getStatusAsync(rootDirectory)
+// mainTest();
+// async function mainTest() {
+//     const response = await getStatusAsync(rootDirectory)
+//     console.log("main response:", response);
+// }
