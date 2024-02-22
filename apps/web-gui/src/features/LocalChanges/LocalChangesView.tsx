@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { UnstagedView } from "./UnstagedView";
 import { StagedView } from "./StagedView";
+import { AppRouterOutput, trpc } from "@/lib/trpc";
 
 type Tab = "Unstaged" | "Staged"
 
@@ -19,11 +20,20 @@ export function LocalChangesView() {
 }
 
 function TabView(props: { tab: Tab }) {
+
+    const statusQuery = trpc.getStatus.useQuery();
+
+    if (statusQuery.isPending || statusQuery.isFetching)
+        return <p className="text-center">Loading git status...</p>
+
+    if (statusQuery.isError)
+        return <p className="text-center text-red-500">Error: {statusQuery.error.message}</p>
+
     if (props.tab === "Unstaged")
-        return <UnstagedView />
+        return <UnstagedView unstagedFiles={statusQuery.data.unstagedFiles} />
 
     if (props.tab === "Staged")
-        return <StagedView />
+        return <StagedView stagedFiles={statusQuery.data.stagedFiles} />
 }
 
 function TabBar(props: { tab: Tab, setTab: (tab: Tab) => void }) {
@@ -54,6 +64,7 @@ function TabButton(props: { title: string, tab: Tab, targetTab: Tab, setTab: (ta
         <button
             className={isActive ? "font-bold" : "font-bold text-muted"}
             onClick={() => props.setTab(props.targetTab)}
+            disabled={props.tab === props.targetTab}
         >
             {props.title}
         </button>

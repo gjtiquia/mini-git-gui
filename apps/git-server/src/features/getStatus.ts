@@ -24,6 +24,8 @@ type FileStatus =
     | "renamed"
     | "copied"
     | "updated-but-unmerged"
+    | "untracked"
+    | "ignored"
 
 const codeStatusMap: Record<string, FileStatus> = {
     "M": "modified",
@@ -33,6 +35,8 @@ const codeStatusMap: Record<string, FileStatus> = {
     "R": "renamed",
     "C": "copied",
     "U": "updated-but-unmerged",
+    "?": "untracked",
+    "!": "ignored"
 }
 
 export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus> {
@@ -95,6 +99,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                         path: e.path
                     }
                 })
+                .filter(e => e.status !== "untracked") // Untracked files belong in unstaged
 
             // console.log("allFiles:", allFiles)
             // console.log("partialUnstagedFiles:", partialUnstagedFiles)

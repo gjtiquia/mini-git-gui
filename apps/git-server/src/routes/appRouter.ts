@@ -1,9 +1,11 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { createContext, router } from "../lib/trpc";
 import { getAllCommitsProcedure } from './getAllCommitsProcedure';
+import { getStatusProcedure } from './getStatusProcedure';
 
 const trpcAppRouter = router({
-    getAllCommits: getAllCommitsProcedure()
+    getAllCommits: getAllCommitsProcedure(),
+    getStatus: getStatusProcedure(),
 });
 
 // export type definition of API
