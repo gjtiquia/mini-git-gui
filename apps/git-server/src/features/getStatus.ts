@@ -12,6 +12,7 @@ interface WorkingTreeStatus {
 
 interface File {
     status: FileStatus,
+    statusCode: FileStatusCode,
     path: string,
 }
 
@@ -27,7 +28,20 @@ type FileStatus =
     | "untracked"
     | "ignored"
 
-const codeStatusMap: Record<string, FileStatus> = {
+type FileStatusCode =
+    " "
+    | "M"
+    | "T"
+    | "A"
+    | "D"
+    | "R"
+    | "C"
+    | "U"
+    | "?"
+    | "!"
+
+const codeStatusMap: Record<FileStatusCode, FileStatus> = {
+    " ": "unmodified",
     "M": "modified",
     "T": "file-type-changed",
     "A": "added",
@@ -60,8 +74,8 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.length > 0)
                 .map(e => {
 
-                    const X = e.substring(0, 1);
-                    const Y = e.substring(1, 2);
+                    const X = e.substring(0, 1) as FileStatusCode;
+                    const Y = e.substring(1, 2) as FileStatusCode;
                     const path = e.substring(3);
 
                     return { X, Y, path };
@@ -79,6 +93,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
                 .map(e => {
                     return {
+                        statusCode: e.code,
                         status: codeStatusMap[e.code],
                         path: e.path
                     }
@@ -95,6 +110,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
                 .map(e => {
                     return {
+                        statusCode: e.code,
                         status: codeStatusMap[e.code],
                         path: e.path
                     }

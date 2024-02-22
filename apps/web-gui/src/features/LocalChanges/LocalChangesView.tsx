@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Separator } from "@/components/ui/separator";
 import { UnstagedView } from "./UnstagedView";
 import { StagedView } from "./StagedView";
 import { trpc } from "@/lib/trpc";
@@ -14,7 +13,6 @@ export function LocalChangesView() {
     return (
         <div className="h-full p-2 flex flex-col gap-2 border-t rounded-md">
             <TabBar tab={tab} setTab={setTab} />
-            {/* <Separator /> */}
             <TabView tab={tab} />
         </div>
     )
