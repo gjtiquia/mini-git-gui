@@ -13,6 +13,7 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
                             <p>{x.status}</p>
                             <p>{x.path}</p>
                         </div>
+
                     )
                 })}
             </div>
