@@ -3,51 +3,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AppRouterOutput } from "@/lib/trpc";
-import { useState } from "react";
+import { useCheckboxState } from "./useCheckboxState";
 
 type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0]
 
 export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
-    const [checkedFileIndexes, setCheckedFileIndexes] = useState<number[]>([]);
-
     const unstagedFiles = props.unstagedFiles;
     // const unstagedFiles = dummyUnstagedFiles;
 
-    function onFileCheckedChanged(fileIndex: number) {
-        setCheckedFileIndexes(previousArray => {
-            const newArray = [...previousArray]
-
-            if (!newArray.includes(fileIndex)) {
-                newArray.push(fileIndex);
-            }
-            else {
-                const existingIndex = newArray.indexOf(fileIndex);
-                newArray.splice(existingIndex, 1);
-            }
-
-            return newArray;
-        })
-    }
-
-    function isAllSelected() {
-        if (unstagedFiles.length === 0)
-            return false;
-
-        for (let i = 0; i < unstagedFiles.length; i++) {
-            if (!checkedFileIndexes.includes(i))
-                return false;
-        }
-
-        return true;
-    }
-
-    function onSelectAll() {
-        if (isAllSelected())
-            setCheckedFileIndexes([])
-        else
-            setCheckedFileIndexes(unstagedFiles.map((_, fileIndex) => fileIndex))
-    }
+    const checkboxState = useCheckboxState(unstagedFiles.length);
 
     return (
         <div className="flex-grow flex flex-col gap-2">
@@ -64,8 +29,8 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
                         <div className="flex items-center gap-3">
                             <Checkbox
                                 id="unstaged-files-select-all"
-                                checked={isAllSelected()}
-                                onCheckedChange={() => onSelectAll()}
+                                checked={checkboxState.isAllCheckboxesChecked()}
+                                onCheckedChange={() => checkboxState.onSelectAllCheckboxes()}
                             />
                             <Label htmlFor="unstaged-files-select-all">Select All</Label>
                         </div>
@@ -74,15 +39,14 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
                         {unstagedFiles.map((file, fileIndex) => {
 
-                            const isChecked = checkedFileIndexes.includes(fileIndex);
                             const checkboxId = "file-" + fileIndex;
 
                             return (
                                 <div key={fileIndex} className="flex items-center gap-3">
                                     <Checkbox
                                         id={checkboxId}
-                                        checked={isChecked}
-                                        onCheckedChange={() => onFileCheckedChanged(fileIndex)}
+                                        checked={checkboxState.isCheckboxChecked(fileIndex)}
+                                        onCheckedChange={() => checkboxState.onCheckboxCheckedChanged(fileIndex)}
                                     />
                                     <div className="flex items-center gap-3">
                                         <p className="font-mono">{file.statusCode}</p>
