@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AppRouterOutput } from "@/lib/trpc";
 import { useState } from "react";
@@ -30,6 +31,9 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
     }
 
     function isAllSelected() {
+        if (unstagedFiles.length === 0)
+            return false;
+
         for (let i = 0; i < unstagedFiles.length; i++) {
             if (!checkedFileIndexes.includes(i))
                 return false;
@@ -59,10 +63,11 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
                         <div className="flex items-center gap-3">
                             <Checkbox
+                                id="unstaged-files-select-all"
                                 checked={isAllSelected()}
                                 onCheckedChange={() => onSelectAll()}
                             />
-                            <p>Select All</p>
+                            <Label htmlFor="unstaged-files-select-all">Select All</Label>
                         </div>
 
                         <Separator />
@@ -70,16 +75,18 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
                         {unstagedFiles.map((file, fileIndex) => {
 
                             const isChecked = checkedFileIndexes.includes(fileIndex);
+                            const checkboxId = "file-" + fileIndex;
 
                             return (
                                 <div key={fileIndex} className="flex items-center gap-3">
                                     <Checkbox
+                                        id={checkboxId}
                                         checked={isChecked}
                                         onCheckedChange={() => onFileCheckedChanged(fileIndex)}
                                     />
-                                    <div className="flex gap-3">
+                                    <div className="flex items-center gap-3">
                                         <p className="font-mono">{file.statusCode}</p>
-                                        <p>{file.path}</p>
+                                        <Label htmlFor={checkboxId}>{file.path}</Label>
                                     </div>
                                 </div>
                             )
