@@ -11,13 +11,14 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
     const unstagedFiles = props.unstagedFiles;
     // const unstagedFiles = dummyUnstagedFiles;
+    // const unstagedFiles = [] as UnstagedFile[];
 
     const checkboxState = useCheckboxState(unstagedFiles.length);
 
     return (
-        <div className="flex-grow flex flex-col gap-2">
-            <div className="flex-grow border rounded-md p-2">
-                <div className="h-full overflow-x-auto">
+        <div className="flex-grow min-h-0 flex flex-col gap-2">
+            <div className="flex-grow min-h-0 border rounded-md overflow-y-auto">
+                <div className="h-full p-2 overflow-x-auto">
 
                     {/* // TODO : Show "No Unstaged Files" if file count is 0 */}
 
@@ -73,7 +74,7 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 }
 
 const dummyUnstagedFiles: UnstagedFile[] = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 16; i++) {
     dummyUnstagedFiles.push({
         statusCode: "M",
         status: "modified",
