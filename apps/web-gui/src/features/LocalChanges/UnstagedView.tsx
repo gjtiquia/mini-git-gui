@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 import { AppRouterOutput } from "@/lib/trpc";
 
 type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0]
@@ -10,17 +12,38 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
     return (
         <div className="flex-grow flex flex-col gap-2">
-            <div className="flex-grow overflow-x-scroll">
-                {unstagedFiles.map(x => {
-                    return (
-                        <div className="flex gap-4 whitespace-nowrap">
-                            <p>{x.statusCode}</p>
-                            <p>{x.path}</p>
+            <div className="flex-grow border rounded-md p-2">
+                <div className="h-full overflow-x-auto">
+
+                    {/* // TODO : Show "No Unstaged Files" if file count is 0 */}
+
+                    {/* https://stackoverflow.com/questions/33746041/child-element-100-width-of-its-parent-with-overflow-scroll/39612912#39612912 */}
+                    {/* Inline block => separator stretch with contents     */}
+                    {/* min-w-full   => separator min width == parent width */}
+                    <div className="inline-block min-w-full space-y-2 whitespace-nowrap">
+
+                        <div className="flex items-center gap-3">
+                            <Checkbox />
+                            <p>Select All</p>
                         </div>
 
-                    )
-                })}
+                        <Separator />
+
+                        {unstagedFiles.map((file, index) => {
+                            return (
+                                <div key={index} className="flex items-center gap-3">
+                                    <Checkbox />
+                                    <div className="flex gap-3">
+                                        <p className="font-mono">{file.statusCode}</p>
+                                        <p>{file.path}</p>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
             </div>
+
 
             <div className="grid grid-cols-3 gap-2">
                 <Button variant={"destructive"}>
