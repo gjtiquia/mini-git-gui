@@ -3,7 +3,8 @@ import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
 import { trpc } from "@/lib/trpc";
 
-const API_URL = "http://localhost:3000";
+// const API_URL = "http://localhost:3000";
+const API_URL = "";
 
 export function OuterProvider(props: { children: React.ReactNode }) {
     const [queryClient] = useState(() => new QueryClient({
