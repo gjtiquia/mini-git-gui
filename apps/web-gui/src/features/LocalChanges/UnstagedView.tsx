@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { AppRouterOutput } from "@/lib/trpc";
+import { AppRouterOutput, trpc } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 
 type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0];
@@ -28,7 +28,26 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 export function FilesTable(props: { files: File[] }) {
 
     const files = props.files;
+
+    const utils = trpc.useUtils();
+    const stageFilesMutation = trpc.stageFiles.useMutation({
+        onSettled: () => utils.invalidate()
+    });
+
     const checkboxState = useCheckboxState(files.length);
+
+    const hasMoreThanOneFileSelected = checkboxState.checkedCheckboxIndexes.length > 0;
+
+    function onStageClicked() {
+        if (!hasMoreThanOneFileSelected)
+            return;
+
+        const filePathsToStage = files
+            .filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index))
+            .map(x => x.path)
+
+        stageFilesMutation.mutate({ filePaths: filePathsToStage })
+    }
 
     return (
         <div className="flex-grow min-h-0 flex flex-col gap-2">
@@ -77,10 +96,18 @@ export function FilesTable(props: { files: File[] }) {
 
 
             <div className="grid grid-cols-3 gap-2">
-                <Button variant={"destructive"}>
+                <Button
+                    variant={"destructive"}
+                    disabled={!hasMoreThanOneFileSelected}
+                >
                     Discard
                 </Button>
-                <Button className="col-span-2">
+
+                <Button
+                    className="col-span-2"
+                    onClick={() => onStageClicked()}
+                    disabled={!hasMoreThanOneFileSelected}
+                >
                     Stage
                 </Button>
             </div>
