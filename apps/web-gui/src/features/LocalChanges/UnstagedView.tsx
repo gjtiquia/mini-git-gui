@@ -5,7 +5,9 @@ import { Separator } from "@/components/ui/separator";
 import { AppRouterOutput } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 
-type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0]
+type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0];
+type StagedFile = AppRouterOutput["getStatus"]["stagedFiles"][0];
+type File = UnstagedFile | StagedFile;
 
 export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
@@ -13,7 +15,20 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
     // const unstagedFiles = dummyUnstagedFiles;
     // const unstagedFiles = [] as UnstagedFile[];
 
-    const checkboxState = useCheckboxState(unstagedFiles.length);
+    if (unstagedFiles.length === 0)
+        return (
+            <div className="flex items-center justify-center">
+                <p>No unstaged files</p>
+            </div>
+        )
+
+    return <FilesTable files={unstagedFiles} />
+}
+
+export function FilesTable(props: { files: File[] }) {
+
+    const files = props.files;
+    const checkboxState = useCheckboxState(files.length);
 
     return (
         <div className="flex-grow min-h-0 flex flex-col gap-2">
@@ -38,7 +53,7 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
                         <Separator />
 
-                        {unstagedFiles.map((file, fileIndex) => {
+                        {files.map((file, fileIndex) => {
 
                             const checkboxId = "file-" + fileIndex;
 
@@ -72,6 +87,7 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
         </div>
     );
 }
+
 
 const dummyUnstagedFiles: UnstagedFile[] = [];
 for (let i = 0; i < 16; i++) {
