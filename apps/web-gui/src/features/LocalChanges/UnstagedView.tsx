@@ -17,8 +17,8 @@ export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
     return (
         <div className="flex-grow min-h-0 flex flex-col gap-2">
-            <div className="flex-grow min-h-0 border rounded-md overflow-y-auto">
-                <div className="h-full p-2 overflow-x-auto">
+            <div className="flex-grow min-h-0 flex flex-col border rounded-md overflow-y-auto">
+                <div className="flex-grow min-h-0 p-2 overflow-auto">
 
                     {/* // TODO : Show "No Unstaged Files" if file count is 0 */}
 
