@@ -23,6 +23,10 @@ export function useCheckboxState(totalCheckboxCount: number) {
         });
     }
 
+    function hasMoreThanOneFileSelected() {
+        return checkedCheckboxIndexes.length > 0;
+    }
+
     function isAllCheckboxesChecked() {
         if (totalCheckboxCount === 0)
             return false;
@@ -56,5 +60,6 @@ export function useCheckboxState(totalCheckboxCount: number) {
         onCheckboxCheckedChanged,
         isAllCheckboxesChecked,
         onSelectAllCheckboxes,
+        hasMoreThanOneFileSelected,
     };
 }
