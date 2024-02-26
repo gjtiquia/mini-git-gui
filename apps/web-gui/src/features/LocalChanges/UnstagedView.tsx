@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { AppRouterOutput, trpc } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 import { FilesTable } from "./FilesTable";
+import { DiscardAlertDialog } from "./DiscardAlertDialog";
 
 type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0];
 
@@ -32,6 +33,14 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
 
     const checkboxState = useCheckboxState(files.length);
 
+    function onDiscardClicked() {
+        if (!checkboxState.hasMoreThanOneFileSelected)
+            return;
+
+        // TODO : Popup "Are You Sure"
+        // TODO : OnClick => Mutation
+    }
+
     function onStageClicked() {
         if (!checkboxState.hasMoreThanOneFileSelected)
             return;
@@ -48,12 +57,15 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
             <FilesTable files={files} checkboxState={checkboxState} />
 
             <div className="grid grid-cols-3 gap-2">
-                <Button
+                {/* <Button
                     variant={"destructive"}
+                    onClick={() => onDiscardClicked()}
                     disabled={!checkboxState.hasMoreThanOneFileSelected()}
                 >
                     Discard
-                </Button>
+                </Button> */}
+
+                <DiscardAlertDialog />
 
                 <Button
                     className="col-span-2"
