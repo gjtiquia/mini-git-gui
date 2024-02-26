@@ -23,13 +23,24 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
 
     const files = props.files;
 
-    // TODO
-    // const utils = trpc.useUtils();
-    // const stageFilesMutation = trpc.stageFiles.useMutation({
-    //     onSettled: () => utils.invalidate()
-    // });
+    const utils = trpc.useUtils();
+
+    const unstageFilesMutation = trpc.unstageFiles.useMutation({
+        onSettled: () => utils.invalidate()
+    });
 
     const checkboxState = useCheckboxState(files.length);
+
+    function onUnstageClicked() {
+        if (!checkboxState.hasMoreThanOneFileSelected)
+            return;
+
+        const filePathsToUnstage = files
+            .filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index))
+            .map(x => x.path)
+
+        unstageFilesMutation.mutate({ filePaths: filePathsToUnstage })
+    }
 
     function onCommitClicked() {
         if (!checkboxState.hasMoreThanOneFileSelected)
@@ -40,7 +51,7 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
             .map(x => x.path)
 
         // TODO
-        // stageFilesMutation.mutate({ filePaths: filePathsToStage })
+        // unstageFilesMutation.mutate({ filePaths: filePathsToStage })
     }
 
     return (
@@ -50,6 +61,7 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
             <div className="grid grid-cols-3 gap-2">
                 <Button
                     variant={"secondary"}
+                    onClick={() => onUnstageClicked()}
                     disabled={!checkboxState.hasMoreThanOneFileSelected()}
                 >
                     Unstage
