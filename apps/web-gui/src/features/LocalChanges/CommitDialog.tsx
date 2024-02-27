@@ -13,7 +13,8 @@ export function CommitDialog(props: { isOpen: boolean, onOpenChange: (open: bool
         <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Commit Selected Files</DialogTitle>
+                    <DialogTitle>Commit All Staged Files</DialogTitle>
+                    <DialogDescription>All staged files will be commited.</DialogDescription>
                 </DialogHeader>
 
                 <div className="flex flex-col gap-8">

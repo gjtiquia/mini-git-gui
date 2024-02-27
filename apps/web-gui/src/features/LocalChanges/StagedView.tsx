@@ -35,7 +35,7 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
     const checkboxState = useCheckboxState(files.length);
 
     function onUnstageClicked() {
-        if (!checkboxState.hasMoreThanOneFileSelected)
+        if (!checkboxState.hasAtLeastOneCheckboxChecked)
             return;
 
         const filePathsToUnstage = files
@@ -45,8 +45,18 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
         unstageFilesMutation.mutate({ filePaths: filePathsToUnstage })
     }
 
+    function canClickCommit() {
+        // At least one but not all selected
+        // => implies that commit is commiting ALL
+        if (checkboxState.hasAtLeastOneCheckboxChecked() && !checkboxState.isAllCheckboxesChecked())
+            return false;
+
+        // Zero selected or all selected
+        return true;
+    }
+
     function onCommitClicked() {
-        if (!checkboxState.hasMoreThanOneFileSelected)
+        if (!canClickCommit())
             return;
 
         setCommitDialogOpen(true);
@@ -71,7 +81,7 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
                 <Button
                     variant={"secondary"}
                     onClick={() => onUnstageClicked()}
-                    disabled={!checkboxState.hasMoreThanOneFileSelected()}
+                    disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
                 >
                     Unstage
                 </Button>
@@ -79,9 +89,9 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
                 <Button
                     className="col-span-2"
                     onClick={() => onCommitClicked()}
-                    disabled={!checkboxState.hasMoreThanOneFileSelected()}
+                    disabled={!canClickCommit()}
                 >
-                    Commit
+                    Commit All Staged Files
                 </Button>
             </div>
 

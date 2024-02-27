@@ -43,7 +43,7 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
     }
 
     function onDiscardClicked() {
-        if (!checkboxState.hasMoreThanOneFileSelected)
+        if (!checkboxState.hasAtLeastOneCheckboxChecked)
             return;
 
         const filesToDiscard = getSelectedFiles();
@@ -52,7 +52,7 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
     }
 
     function onStageClicked() {
-        if (!checkboxState.hasMoreThanOneFileSelected)
+        if (!checkboxState.hasAtLeastOneCheckboxChecked)
             return;
 
         const filePathsToStage = getSelectedFiles().map(x => x.path)
@@ -75,13 +75,13 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
 
                 <DiscardAlertDialog
                     onActionClicked={() => onDiscardClicked()}
-                    disabled={!checkboxState.hasMoreThanOneFileSelected()}
+                    disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
                 />
 
                 <Button
                     className="col-span-2"
                     onClick={() => onStageClicked()}
-                    disabled={!checkboxState.hasMoreThanOneFileSelected()}
+                    disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
                 >
                     Stage
                 </Button>
