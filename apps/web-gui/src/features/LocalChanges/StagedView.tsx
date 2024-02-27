@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { AppRouterOutput, trpc } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 import { FilesTable } from "./FilesTable";
+import { CommitDialog } from "./CommitDialog";
+import { useState } from "react";
 
 type StagedFile = AppRouterOutput["getStatus"]["stagedFiles"][0];
 
@@ -22,6 +24,7 @@ export function StagedView(props: { stagedFiles: StagedFile[] }) {
 function StagedFilesTable(props: { files: StagedFile[] }) {
 
     const files = props.files;
+    const [isCommitDialogOpen, setCommitDialogOpen] = useState(false);
 
     const utils = trpc.useUtils();
 
@@ -45,6 +48,12 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
     function onCommitClicked() {
         if (!checkboxState.hasMoreThanOneFileSelected)
             return;
+
+        setCommitDialogOpen(true);
+    }
+
+    function onCommitFromDialogClicked() {
+        setCommitDialogOpen(false);
 
         const filePathsToCommit = files
             .filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index))
@@ -75,6 +84,12 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
                     Commit
                 </Button>
             </div>
+
+            <CommitDialog
+                isOpen={isCommitDialogOpen}
+                onOpenChange={setCommitDialogOpen}
+                onCommitClicked={() => onCommitFromDialogClicked()}
+            />
         </div>
     );
 }
