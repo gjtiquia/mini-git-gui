@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { File, FileStatusCode, codeStatusMap } from "./types";
 
 /* References
 - https://git-scm.com/docs/git-status#_options
@@ -8,49 +9,6 @@ import { spawn } from "child_process";
 interface WorkingTreeStatus {
     unstagedFiles: File[],
     stagedFiles: File[]
-}
-
-interface File {
-    status: FileStatus,
-    statusCode: FileStatusCode,
-    path: string,
-}
-
-type FileStatus =
-    "unmodified"
-    | "modified"
-    | "file-type-changed"
-    | "added"
-    | "deleted"
-    | "renamed"
-    | "copied"
-    | "updated-but-unmerged"
-    | "untracked"
-    | "ignored"
-
-type FileStatusCode =
-    " "
-    | "M"
-    | "T"
-    | "A"
-    | "D"
-    | "R"
-    | "C"
-    | "U"
-    | "?"
-    | "!"
-
-const codeStatusMap: Record<FileStatusCode, FileStatus> = {
-    " ": "unmodified",
-    "M": "modified",
-    "T": "file-type-changed",
-    "A": "added",
-    "D": "deleted",
-    "R": "renamed",
-    "C": "copied",
-    "U": "updated-but-unmerged",
-    "?": "untracked",
-    "!": "ignored"
 }
 
 export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus> {

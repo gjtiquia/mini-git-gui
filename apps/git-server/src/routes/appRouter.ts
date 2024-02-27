@@ -4,6 +4,7 @@ import { getAllCommitsProcedure } from './getAllCommitsProcedure';
 import { getStatusProcedure } from './getStatusProcedure';
 import { stageFilesProcedure } from './stageFilesProcedure';
 import { unstageFilesProcedure } from './unstageFilesProcedure';
+import { discardFilesProcedure } from './discardFilesProcedure';
 
 const trpcAppRouter = router({
     // Commits View
@@ -13,6 +14,7 @@ const trpcAppRouter = router({
     getStatus: getStatusProcedure(),
 
     // UnstagedChanges View
+    discardFiles: discardFilesProcedure(),
     stageFiles: stageFilesProcedure(),
 
     // StagedChanges View

@@ -27,26 +27,35 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
     const files = props.files;
 
     const utils = trpc.useUtils();
+
+    const discardFilesMutation = trpc.discardFiles.useMutation({
+        onSettled: () => utils.invalidate()
+    });
+
     const stageFilesMutation = trpc.stageFiles.useMutation({
         onSettled: () => utils.invalidate()
     });
 
     const checkboxState = useCheckboxState(files.length);
 
+    function getSelectedFiles() {
+        return files.filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index));
+    }
+
     function onDiscardClicked() {
         if (!checkboxState.hasMoreThanOneFileSelected)
             return;
 
-        // TODO : Discard Mutation
+        const filesToDiscard = getSelectedFiles();
+
+        discardFilesMutation.mutate({ files: filesToDiscard })
     }
 
     function onStageClicked() {
         if (!checkboxState.hasMoreThanOneFileSelected)
             return;
 
-        const filePathsToStage = files
-            .filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index))
-            .map(x => x.path)
+        const filePathsToStage = getSelectedFiles().map(x => x.path)
 
         stageFilesMutation.mutate({ filePaths: filePathsToStage })
     }
