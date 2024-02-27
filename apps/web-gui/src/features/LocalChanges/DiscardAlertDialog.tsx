@@ -9,14 +9,15 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 
-export function DiscardAlertDialog() {
+export function DiscardAlertDialog(props: { onActionClicked: () => void, disabled: boolean }) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button
                     variant="destructive"
+                    disabled={props.disabled}
                 >
                     Discard
                 </Button>
@@ -24,16 +25,24 @@ export function DiscardAlertDialog() {
 
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogTitle>Discard selected files?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        The selected files will be discarded. All uncommited changes will be lost.
+                        All uncommited changes will be lost.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>
+                        Cancel
+                    </AlertDialogCancel>
 
-                    {/* //TODO destructive button variant */}
-                    <AlertDialogAction>Discard</AlertDialogAction>
+                    <AlertDialogAction
+                        className={buttonVariants({ variant: "destructive" })}
+                        onClick={() => props.onActionClicked()}
+
+                    >
+                        Discard
+                    </AlertDialogAction>
+
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

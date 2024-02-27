@@ -37,8 +37,7 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
         if (!checkboxState.hasMoreThanOneFileSelected)
             return;
 
-        // TODO : Popup "Are You Sure"
-        // TODO : OnClick => Mutation
+        // TODO : Discard Mutation
     }
 
     function onStageClicked() {
@@ -65,7 +64,10 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
                     Discard
                 </Button> */}
 
-                <DiscardAlertDialog />
+                <DiscardAlertDialog
+                    onActionClicked={() => onDiscardClicked()}
+                    disabled={!checkboxState.hasMoreThanOneFileSelected()}
+                />
 
                 <Button
                     className="col-span-2"
