@@ -62,15 +62,12 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
         setCommitDialogOpen(true);
     }
 
-    function onCommitFromDialogClicked() {
+    function onCommitFromDialogClicked(commitInput: { message: string, description?: string }) {
         setCommitDialogOpen(false);
 
-        const filePathsToCommit = files
-            .filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index))
-            .map(x => x.path)
-
         // TODO
-        // unstageFilesMutation.mutate({ filePaths: filePathsToStage })
+        console.log(commitInput);
+        // unstageFilesMutation.mutate({ message, description })
     }
 
     return (
@@ -98,7 +95,7 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
             <CommitDialog
                 isOpen={isCommitDialogOpen}
                 onOpenChange={setCommitDialogOpen}
-                onCommitClicked={() => onCommitFromDialogClicked()}
+                onCommitClicked={(commitInput) => onCommitFromDialogClicked(commitInput)}
             />
         </div>
     );
