@@ -49,7 +49,7 @@ export function CommitDialog(props: { isOpen: boolean, onOpenChange: (open: bool
                         <Input id="commit-message" placeholder="Required" value={commitMessage} onChange={(x) => setCommitMessage(x.target.value)} />
 
                         <Label htmlFor="commit-description">Description</Label>
-                        <Input id="commit-description" placeholder="(Optional)" />
+                        <Input id="commit-description" placeholder="(Optional)" value={commitDescription} onChange={(x) => setCommitDescription(x.target.value)} />
                     </div>
 
                     <Button onClick={onCommitClicked} disabled={!canPressCommit()}>
