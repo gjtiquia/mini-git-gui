@@ -3,6 +3,7 @@ import { AppRouterOutput, trpc } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 import { FilesTable } from "./FilesTable";
 import { DiscardAlertDialog } from "./DiscardAlertDialog";
+import { OptionsButton } from "./OptionsButton";
 
 type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0];
 
@@ -64,27 +65,25 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
         <div className="flex-grow min-h-0 flex flex-col gap-2">
             <FilesTable files={files} checkboxState={checkboxState} />
 
-            <div className="grid grid-cols-3 gap-2">
-                {/* <Button
-                    variant={"destructive"}
-                    onClick={() => onDiscardClicked()}
-                    disabled={!checkboxState.hasMoreThanOneFileSelected()}
-                >
-                    Discard
-                </Button> */}
-
-                <DiscardAlertDialog
-                    onActionClicked={() => onDiscardClicked()}
+            <div className="flex gap-2">
+                <OptionsButton
                     disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
                 />
 
-                <Button
-                    className="col-span-2"
-                    onClick={() => onStageClicked()}
-                    disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
-                >
-                    Stage
-                </Button>
+                <div className="flex-grow grid grid-cols-3 gap-2">
+                    <DiscardAlertDialog
+                        onActionClicked={() => onDiscardClicked()}
+                        disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
+                    />
+
+                    <Button
+                        className="col-span-2"
+                        onClick={() => onStageClicked()}
+                        disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
+                    >
+                        Stage
+                    </Button>
+                </div>
             </div>
         </div>
     );
