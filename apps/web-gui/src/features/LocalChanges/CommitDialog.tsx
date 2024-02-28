@@ -22,7 +22,7 @@ export function CommitDialog(props: { isOpen: boolean, onOpenChange: (open: bool
         const description = commitDescription.length > 0 ? commitDescription : undefined;
 
         const commitInput = { message, description };
-        console.log("commitInput from dialog", commitInput);
+        // console.log("commitInput from dialog", commitInput);
 
         props.onCommitClicked(commitInput);
 

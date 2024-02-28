@@ -12,7 +12,7 @@ export function commitFilesProcedure() {
         .mutation(async (opts) => {
             const { input } = opts;
 
-            console.log("commitFilesProcedure input", input);
+            // console.log("commitFilesProcedure input", input);
             await commitFilesAsync(rootDirectory, input.message, input.description);
         });
 }
