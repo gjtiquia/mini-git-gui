@@ -58,7 +58,7 @@ function FetchDialog() {
                 </AlertDialogHeader>
 
                 {fetchMutation.isError
-                    && <p className="text-center text-red-500">{fetchMutation.error.message}</p>
+                    && <p className="text-center text-red-500">Error: {fetchMutation.error.message}</p>
                 }
 
                 {(fetchMutation.isPending)
