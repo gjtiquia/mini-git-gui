@@ -13,8 +13,8 @@ export function commitFilesAsync(rootDirectory: string, message: string, descrip
             args.push(description);
         }
 
-        console.log("commitFilesAsync process command:", command);
-        console.log("commitFilesAsync process args:", args);
+        console.log("commit files process command:", command);
+        console.log("commit files process args:", args);
 
         const gitCommit = spawn(command, args, {
             cwd: rootDirectory
