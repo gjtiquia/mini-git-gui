@@ -1,8 +1,9 @@
-import { RotateCw } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function ReloadButton() {
+
+export function FetchButton() {
     const queryClient = useQueryClient();
 
     function reload() {
@@ -12,7 +13,7 @@ export function ReloadButton() {
 
     return (
         <Button size="icon" variant={"secondary"} onClick={() => reload()}>
-            <RotateCw className="h-[1.2rem] w-[1.2rem]" />
+            <ArrowDown className="h-[1.2rem] w-[1.2rem]" />
         </Button>
     );
 }
