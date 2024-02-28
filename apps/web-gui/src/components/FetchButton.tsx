@@ -14,7 +14,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 
-
 export function FetchButton() {
     return (
         <FetchDialog />
@@ -36,13 +35,17 @@ function FetchDialog() {
         }
     });
 
+    function onDialogOpen() {
+        fetchMutation.reset()
+    }
+
     function fetch() {
         fetchMutation.mutate();
     }
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialogTrigger asChild>
+            <AlertDialogTrigger asChild onClick={() => onDialogOpen()}>
                 <Button size="icon" variant={"secondary"}>
                     <ArrowDown className="h-[1.2rem] w-[1.2rem]" />
                 </Button>
@@ -58,7 +61,7 @@ function FetchDialog() {
                 </AlertDialogHeader>
 
                 {fetchMutation.isError
-                    && <p className="text-center text-red-500">Error: {fetchMutation.error.message}</p>
+                    && <p className="text-red-500">{fetchMutation.error.message}</p>
                 }
 
                 {(fetchMutation.isPending)

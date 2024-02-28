@@ -29,7 +29,8 @@ export function unstageFilesAsync(rootDirectory: string, filePaths: string[]): P
 
         gitRestore.on('exit', (code, signal) => {
             if (code === 1) {
-                reject(`Child process exited with code ${code} and signal ${signal}, Error: ${error}`);
+                console.error(`Child process exited with code ${code} and signal ${signal}, Error: ${error}`);
+                reject(error);
                 return;
             }
 

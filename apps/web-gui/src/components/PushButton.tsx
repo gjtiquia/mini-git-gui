@@ -35,13 +35,17 @@ function PushDialog() {
         }
     });
 
+    function onDialogOpen() {
+        pushMutation.reset()
+    }
+
     function push() {
         pushMutation.mutate();
     }
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialogTrigger asChild>
+            <AlertDialogTrigger asChild onClick={() => onDialogOpen()}>
                 <Button size="icon" variant={"secondary"}>
                     <ArrowUpFromLine className="h-[1.2rem] w-[1.2rem]" />
                 </Button>
@@ -57,7 +61,7 @@ function PushDialog() {
                 </AlertDialogHeader>
 
                 {pushMutation.isError
-                    && <p className="text-center text-red-500">Error: {pushMutation.error.message}</p>
+                    && <p className="text-red-500">{pushMutation.error.message}</p>
                 }
 
                 {(pushMutation.isPending)

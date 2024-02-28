@@ -35,13 +35,17 @@ function PullDialog() {
         }
     });
 
+    function onDialogOpen() {
+        pullMutation.reset()
+    }
+
     function pull() {
         pullMutation.mutate();
     }
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialogTrigger asChild>
+            <AlertDialogTrigger asChild onClick={() => onDialogOpen()}>
                 <Button size="icon" variant={"secondary"}>
                     <ArrowDownToLine className="h-[1.2rem] w-[1.2rem]" />
                 </Button>
@@ -57,7 +61,7 @@ function PullDialog() {
                 </AlertDialogHeader>
 
                 {pullMutation.isError
-                    && <p className="text-center text-red-500">Error: {pullMutation.error.message}</p>
+                    && <p className="text-red-500">{pullMutation.error.message}</p>
                 }
 
                 {(pullMutation.isPending)
