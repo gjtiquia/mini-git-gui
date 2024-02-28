@@ -3,7 +3,7 @@ import { spawn } from "child_process";
 // Tracked files: git restore <file-1> <file-2> ...
 // (recommended by git status command)
 
-export function discardTrackedFiles(rootDirectory: string, filePaths: string[]): Promise<void> {
+export function discardTrackedFilesAsync(rootDirectory: string, filePaths: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
 
         let error = "";

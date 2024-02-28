@@ -5,6 +5,7 @@ import { getStatusProcedure } from './getStatusProcedure';
 import { stageFilesProcedure } from './stageFilesProcedure';
 import { unstageFilesProcedure } from './unstageFilesProcedure';
 import { discardFilesProcedure } from './discardFilesProcedure';
+import { commitFilesProcedure } from './commitFilesProcedure';
 
 const trpcAppRouter = router({
     // Commits View
@@ -19,6 +20,7 @@ const trpcAppRouter = router({
 
     // StagedChanges View
     unstageFiles: unstageFilesProcedure(),
+    commitFiles: commitFilesProcedure(),
 });
 
 // export type definition of API

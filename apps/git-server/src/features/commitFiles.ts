@@ -1,20 +1,27 @@
 import { spawn } from "child_process";
 
-// Discard untracked files: git clean -f <file-1> <file-2> ...
-// (remember to pass in filepath OR ELSE ALL UNTRACKED FILES WILL BE DELETED)
-// (-f must be passed or else will not clean. fyi: -i for interactive mode)
-
-export function discardUntrackedFilesAsync(rootDirectory: string, filePaths: string[]): Promise<void> {
+export function commitFilesAsync(rootDirectory: string, message: string, description?: string): Promise<void> {
     return new Promise((resolve, reject) => {
 
         let error = "";
 
-        const gitClean = spawn("git", ["clean", "-f", ...filePaths], {
+        const command = "git"
+        const args = ["commit", "-m", message]
+
+        if (description !== undefined) {
+            args.push("-m");
+            args.push(description);
+        }
+
+        console.log("commit files process command:", command);
+        console.log("commit files process args:", args);
+
+        const gitCommit = spawn(command, args, {
             cwd: rootDirectory
         });
 
         // Note: this may get called multiple times before process exit
-        gitClean.stdout.on('data', (data) => {
+        gitCommit.stdout.on('data', (data) => {
             const rawData: string = data.toString();
 
             // Do nothing with the raw data
@@ -22,11 +29,11 @@ export function discardUntrackedFilesAsync(rootDirectory: string, filePaths: str
         })
 
         // Note: this may get called multiple times before process exit
-        gitClean.stderr.on('data', (data) => {
+        gitCommit.stderr.on('data', (data) => {
             error += `${data} `;
         });
 
-        gitClean.on('exit', (code, signal) => {
+        gitCommit.on('exit', (code, signal) => {
             if (code === 1) {
                 reject(`Child process exited with code ${code} and signal ${signal}, Error: ${error}`);
                 return;

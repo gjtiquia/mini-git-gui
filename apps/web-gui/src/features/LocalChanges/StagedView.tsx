@@ -32,6 +32,10 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
         onSettled: () => utils.invalidate()
     });
 
+    const commitFilesMutation = trpc.commitFiles.useMutation({
+        onSettled: () => utils.invalidate()
+    });
+
     const checkboxState = useCheckboxState(files.length);
 
     function onUnstageClicked() {
@@ -65,9 +69,10 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
     function onCommitFromDialogClicked(commitInput: { message: string, description?: string }) {
         setCommitDialogOpen(false);
 
-        // TODO
-        console.log(commitInput);
-        // unstageFilesMutation.mutate({ message, description })
+        commitFilesMutation.mutate({
+            message: commitInput.message,
+            description: commitInput.description
+        })
     }
 
     return (
