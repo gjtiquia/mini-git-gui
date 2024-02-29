@@ -1,12 +1,8 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { AppRouterOutput } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
-
-type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0];
-type StagedFile = AppRouterOutput["getStatus"]["stagedFiles"][0];
-type File = UnstagedFile | StagedFile;
+import type { File } from "./types"
 
 type CheckboxState = ReturnType<typeof useCheckboxState>;
 

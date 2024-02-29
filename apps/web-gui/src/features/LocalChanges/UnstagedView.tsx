@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { AppRouterOutput, trpc } from "@/lib/trpc";
+import { trpc } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 import { FilesTable } from "./FilesTable";
 import { DiscardAlertDialog } from "./DiscardAlertDialog";
 import { OptionsButton } from "./OptionsButton";
-
-type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0];
+import type { UnstagedFile } from "./types"
 
 export function UnstagedView(props: { unstagedFiles: UnstagedFile[] }) {
 
@@ -67,6 +66,7 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
 
             <div className="flex gap-2">
                 <OptionsButton
+                    selectedFiles={getSelectedFiles()}
                     disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
                 />
 

@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { AppRouterOutput, trpc } from "@/lib/trpc";
+import { trpc } from "@/lib/trpc";
 import { useCheckboxState } from "./useCheckboxState";
 import { FilesTable } from "./FilesTable";
 import { CommitDialog } from "./CommitDialog";
 import { useState } from "react";
-
-type StagedFile = AppRouterOutput["getStatus"]["stagedFiles"][0];
+import type { StagedFile } from "./types"
 
 export function StagedView(props: { stagedFiles: StagedFile[] }) {
 
