@@ -4,7 +4,7 @@ import {
     SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { useState } from "react";
 import { ExtractAtomValue, useAtom } from "jotai";
 import { Menu } from "lucide-react";

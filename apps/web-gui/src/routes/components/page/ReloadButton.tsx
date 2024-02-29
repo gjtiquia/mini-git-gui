@@ -1,5 +1,5 @@
 import { RotateCw } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function ReloadButton() {

@@ -8,24 +8,24 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { ArrowDown } from "lucide-react";
-import { Button } from "./ui/button";
+import { ArrowUpFromLine } from "lucide-react";
+import { Button } from "../../../components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 
-export function FetchButton() {
+export function PushButton() {
     return (
-        <FetchDialog />
+        <PushDialog />
     );
 }
 
-function FetchDialog() {
+function PushDialog() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const queryClient = useQueryClient();
-    const fetchMutation = trpc.fetch.useMutation({
+    const pushMutation = trpc.push.useMutation({
         onSuccess: () => {
             setIsDialogOpen(false);
         },
@@ -36,56 +36,56 @@ function FetchDialog() {
     });
 
     function onDialogOpen() {
-        fetchMutation.reset()
+        pushMutation.reset()
     }
 
-    function fetch() {
-        fetchMutation.mutate();
+    function push() {
+        pushMutation.mutate();
     }
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <AlertDialogTrigger asChild onClick={() => onDialogOpen()}>
                 <Button size="icon" variant={"secondary"}>
-                    <ArrowDown className="h-[1.2rem] w-[1.2rem]" />
+                    <ArrowUpFromLine className="h-[1.2rem] w-[1.2rem]" />
                 </Button>
             </AlertDialogTrigger>
 
             <AlertDialogContent>
 
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Fetch</AlertDialogTitle>
+                    <AlertDialogTitle>Push</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Fetch latest changes from remote repository.
+                        Push your local changes to remote repository.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
-                {fetchMutation.isError
-                    && <p className="text-red-500">{fetchMutation.error.message}</p>
+                {pushMutation.isError
+                    && <p className="text-red-500">{pushMutation.error.message}</p>
                 }
 
-                {(fetchMutation.isPending)
-                    ? <PendingFetchFooter />
-                    : <DefaultFetchFooter onFetchClicked={() => fetch()} />
+                {(pushMutation.isPending)
+                    ? <PendingPushFooter />
+                    : <DefaultPushFooter onPushClicked={() => push()} />
                 }
             </AlertDialogContent>
         </AlertDialog>
     )
 }
 
-function DefaultFetchFooter(props: { onFetchClicked: () => void }) {
+function DefaultPushFooter(props: { onPushClicked: () => void }) {
     return (
         <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button onClick={props.onFetchClicked}>Fetch</Button>
+            <Button onClick={props.onPushClicked}>Push</Button>
         </AlertDialogFooter>
     )
 }
 
-function PendingFetchFooter() {
+function PendingPushFooter() {
     return (
         <AlertDialogFooter>
-            <Button disabled>Fetching...</Button>
+            <Button disabled>Pushing...</Button>
         </AlertDialogFooter>
     )
 }
