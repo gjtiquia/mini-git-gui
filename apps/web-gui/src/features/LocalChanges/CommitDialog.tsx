@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 
+// TODO : Change to AlertDialog and loading handling (just like push/pull/fetch)
+
 export function CommitDialog(props: { isOpen: boolean, onOpenChange: (open: boolean) => void, onCommitClicked: (commitInput: { message: string, description?: string }) => void }) {
 
     const [commitMessage, setCommitMessage] = useState("");
