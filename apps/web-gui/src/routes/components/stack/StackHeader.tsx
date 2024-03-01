@@ -1,12 +1,25 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
+import { X } from "lucide-react";
 import { stackAtom } from "@/lib/atoms";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
 export function StackHeader() {
+
+    const stack = useAtomValue(stackAtom);
+    const title =
+        stack === "Diff" ? "File Changes"
+            : stack === "None" ? "None"
+                : "None"
+
     return (
-        <div className="flex justify-end">
-            <CloseStackButton />
+        <div className="flex justify-between items-center">
+            <div className="pl-2">
+                <p className="text-lg font-semibold">{title}</p>
+            </div>
+
+            <div>
+                <CloseStackButton />
+            </div>
         </div>
     );
 }
