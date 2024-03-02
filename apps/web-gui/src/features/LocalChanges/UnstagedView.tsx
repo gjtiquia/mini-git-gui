@@ -55,9 +55,9 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
         if (!checkboxState.hasAtLeastOneCheckboxChecked)
             return;
 
-        const filePathsToStage = getSelectedFiles().map(x => x.path)
+        const filePathsToStage = getSelectedFiles()
 
-        stageFilesMutation.mutate({ filePaths: filePathsToStage })
+        stageFilesMutation.mutate({ files: filePathsToStage })
     }
 
     return (

@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
 import { File } from "./types";
+import { getUniquePathsAndOriginalPaths } from "./utils";
 
 // Unstage has same commands for tracked (existing) and untracked (new) files
 
@@ -11,11 +12,7 @@ export function unstageFilesAsync(rootDirectory: string, files: File[]): Promise
 
         let error = "";
 
-        const filePaths = files.map(x => x.path);
-        files.forEach(x => {
-            if (!filePaths.includes(x.originalPath))
-                filePaths.push(x.originalPath)
-        })
+        const filePaths = getUniquePathsAndOriginalPaths(files);
 
         const gitRestore = spawn("git", ["restore", "--staged", ...filePaths], {
             cwd: rootDirectory

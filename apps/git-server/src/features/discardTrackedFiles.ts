@@ -1,12 +1,16 @@
 import { spawn } from "child_process";
+import { File } from "./types";
+import { getUniquePathsAndOriginalPaths } from "./utils";
 
 // Tracked files: git restore <file-1> <file-2> ...
 // (recommended by git status command)
 
-export function discardTrackedFilesAsync(rootDirectory: string, filePaths: string[]): Promise<void> {
+export function discardTrackedFilesAsync(rootDirectory: string, files: File[]): Promise<void> {
     return new Promise((resolve, reject) => {
 
         let error = "";
+
+        const filePaths = getUniquePathsAndOriginalPaths(files);
 
         const gitRestore = spawn("git", ["restore", ...filePaths], {
             cwd: rootDirectory

@@ -8,11 +8,9 @@ export async function discardFilesAsync(rootDirectory: string, files: File[]) {
 
     const untrackedFilePaths = files
         .filter(x => x.status === "untracked")
-        .map(x => x.path)
 
     const trackedFilePaths = files
         .filter(x => x.status !== "untracked")
-        .map(x => x.path)
 
     await discardUntrackedFilesAsync(rootDirectory, untrackedFilePaths);
     await discardTrackedFilesAsync(rootDirectory, trackedFilePaths);

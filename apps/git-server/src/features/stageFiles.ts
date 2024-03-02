@@ -1,9 +1,13 @@
 import { spawn } from "child_process";
+import { File } from "./types";
+import { getUniquePathsAndOriginalPaths } from "./utils";
 
-export function stageFilesAsync(rootDirectory: string, filePaths: string[]): Promise<void> {
+export function stageFilesAsync(rootDirectory: string, files: File[]): Promise<void> {
     return new Promise((resolve, reject) => {
 
         let error = "";
+
+        const filePaths = getUniquePathsAndOriginalPaths(files);
 
         const gitAdd = spawn("git", ["add", ...filePaths], {
             cwd: rootDirectory
