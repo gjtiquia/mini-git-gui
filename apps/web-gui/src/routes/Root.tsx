@@ -2,6 +2,7 @@ import { useAtomValue } from "jotai";
 import { pageAtom } from "@/lib/atoms";
 import { LocalChangesView } from "@/features/LocalChanges";
 import { CommitsView } from "@/features/ShowAllCommits";
+import { Toaster } from "@/components/ui/toaster"
 import { Header } from "./components/page/Header";
 import { StackScreen } from "./StackScreen";
 
@@ -14,6 +15,7 @@ export function Root() {
             </div>
 
             <StackScreen />
+            <Toaster />
         </>
     )
 }
