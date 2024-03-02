@@ -48,6 +48,8 @@ export type File = z.infer<typeof fileSchema>
 export const fileSchema = z.object({
     status: fileStatusSchema,
     statusCode: fileStatusCodeSchema,
+    formattedPath: z.string(),
+    originalPath: z.string(),
     path: z.string(),
     name: z.string(),
 })

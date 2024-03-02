@@ -44,7 +44,7 @@ export function FilesTable(props: { files: File[]; checkboxState: CheckboxState;
                                 <div className="flex items-center gap-3">
                                     <p className="font-mono">{file.statusCode}</p>
                                     <Label htmlFor={checkboxId}>{file.name}</Label>
-                                    <Label htmlFor={checkboxId}>{file.path}</Label>
+                                    <Label htmlFor={checkboxId}>{file.formattedPath}</Label>
                                 </div>
                             </div>
                         );

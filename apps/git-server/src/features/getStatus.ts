@@ -35,10 +35,30 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
 
                     const X = e.substring(0, 1) as FileStatusCode;
                     const Y = e.substring(1, 2) as FileStatusCode;
-                    const path = e.substring(3);
+                    const formattedPath = e.substring(3);
+
+                    /*
+                    https://git-scm.com/docs/git-status#_short_format
+                    In the short-format, the status of each path is shown as one of these forms
+
+                    XY PATH
+                    XY ORIG_PATH -> PATH
+
+                    ORIG_PATH is only shown when the entry is renamed or copied. 
+                    */
+
+                    let originalPath = formattedPath;
+                    let path = formattedPath;
+
+                    if (X === "R" || X === "C" || Y === "R" || Y === "C") {
+                        const pathArray = formattedPath.split(" -> ");
+                        originalPath = pathArray[0];
+                        path = pathArray[1];
+                    }
+
                     const name = nodePath.basename(path);
 
-                    return { X, Y, path, name };
+                    return { X, Y, formattedPath, originalPath, path, name };
                 })
 
 
@@ -53,10 +73,9 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
                 .map(e => {
                     return {
+                        ...e,
                         statusCode: e.code,
                         status: codeStatusMap[e.code],
-                        path: e.path,
-                        name: e.name,
                     }
                 })
 
@@ -71,10 +90,9 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
                 .map(e => {
                     return {
+                        ...e,
                         statusCode: e.code,
                         status: codeStatusMap[e.code],
-                        path: e.path,
-                        name: e.name,
                     }
                 })
                 .filter(e => e.status !== "untracked") // Untracked files belong in unstaged
@@ -104,7 +122,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 stagedFiles,
             }
 
-            // console.log("workingTreeStatus:", workingTreeStatus);
+            console.log("workingTreeStatus:", workingTreeStatus);
             resolve(workingTreeStatus);
         });
     })
