@@ -49,4 +49,5 @@ export const fileSchema = z.object({
     status: fileStatusSchema,
     statusCode: fileStatusCodeSchema,
     path: z.string(),
+    name: z.string(),
 })

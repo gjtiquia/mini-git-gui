@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import nodePath from 'path';
 import { File, FileStatusCode, codeStatusMap } from "./types";
 
 /* References
@@ -35,8 +36,9 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                     const X = e.substring(0, 1) as FileStatusCode;
                     const Y = e.substring(1, 2) as FileStatusCode;
                     const path = e.substring(3);
+                    const name = nodePath.basename(path);
 
-                    return { X, Y, path };
+                    return { X, Y, path, name };
                 })
 
 
@@ -44,8 +46,8 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.Y !== ' ') // Ignore unmodified files
                 .map(e => {
                     return {
+                        ...e,
                         code: e.Y,
-                        path: e.path
                     }
                 })
                 .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
@@ -53,7 +55,8 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                     return {
                         statusCode: e.code,
                         status: codeStatusMap[e.code],
-                        path: e.path
+                        path: e.path,
+                        name: e.name,
                     }
                 })
 
@@ -61,8 +64,8 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 .filter(e => e.X !== ' ') // Ignore unmodified files
                 .map(e => {
                     return {
+                        ...e,
                         code: e.X,
-                        path: e.path
                     }
                 })
                 .filter(e => e.code in codeStatusMap) // Ignore files with invalid status codes
@@ -70,7 +73,8 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                     return {
                         statusCode: e.code,
                         status: codeStatusMap[e.code],
-                        path: e.path
+                        path: e.path,
+                        name: e.name,
                     }
                 })
                 .filter(e => e.status !== "untracked") // Untracked files belong in unstaged

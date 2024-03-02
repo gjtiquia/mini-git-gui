@@ -3,12 +3,6 @@ import { selectedFilesAtom } from "@/lib/atoms";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 
-// TODO : Header showing title "Diff"/"File Changes" (Belongs in the StackHeader component)
-
-// TODO : Sub Header for file name
-// TODO : scrollable vertical screen showing
-// TODO : Footer arrow buttons for seeing next/previous file diff
-
 export function DiffStack() {
 
     const selectedFiles = useAtomValue(selectedFilesAtom);
@@ -37,17 +31,16 @@ export function DiffStack() {
 
     return (
         <div className="p-2 flex-grow min-h-0 flex flex-col gap-2">
-            <div>
+            <div className="whitespace-nowrap">
                 <div className="flex gap-2">
-                    <p>Name:</p>
-                    <p className="flex-grow min-w-0 whitespace-nowrap overflow-x-auto">{currentFile.path}</p>
+                    <p>File Name:</p>
+                    <p className="flex-grow min-w-0 overflow-x-auto">{currentFile.name}</p>
                 </div>
                 <div className="flex gap-2">
-                    <p>Path:</p>
-                    <p className="flex-grow min-w-0 whitespace-nowrap overflow-x-auto">{currentFile.path}</p>
+                    <p>File Path:</p>
+                    <p className="flex-grow min-w-0 overflow-x-auto">{currentFile.path}</p>
                 </div>
             </div>
-
 
             <div className="flex-grow min-h-0 border rounded-md p-2">
                 <p>TODO: Get File Diff From Git</p>
