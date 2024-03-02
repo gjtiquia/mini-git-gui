@@ -41,11 +41,10 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
         if (!checkboxState.hasAtLeastOneCheckboxChecked)
             return;
 
-        const filePathsToUnstage = files
+        const filesToUnstage = files
             .filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index))
-            .map(x => x.path)
 
-        unstageFilesMutation.mutate({ filePaths: filePathsToUnstage })
+        unstageFilesMutation.mutate({ files: filesToUnstage })
     }
 
     function canClickCommit() {

@@ -122,7 +122,7 @@ export function getStatusAsync(rootDirectory: string): Promise<WorkingTreeStatus
                 stagedFiles,
             }
 
-            console.log("workingTreeStatus:", workingTreeStatus);
+            // console.log("workingTreeStatus:", workingTreeStatus);
             resolve(workingTreeStatus);
         });
     })

@@ -2,14 +2,15 @@ import z from "zod";
 import { publicProcedure } from "../lib/trpc";
 import { rootDirectory } from "../store";
 import { unstageFilesAsync } from "../features/unstageFiles";
+import { fileSchema } from "../features/types";
 
 export function unstageFilesProcedure() {
     return publicProcedure
         .input(z.object({
-            filePaths: z.array(z.string())
+            files: z.array(fileSchema)
         }))
         .mutation(async (opts) => {
             const { input } = opts;
-            await unstageFilesAsync(rootDirectory, input.filePaths);
+            await unstageFilesAsync(rootDirectory, input.files);
         });
 }

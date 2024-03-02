@@ -1,14 +1,21 @@
 import { spawn } from "child_process";
+import { File } from "./types";
 
 // Unstage has same commands for tracked (existing) and untracked (new) files
 
 // git restore --staged <file-1> <file-2> ...
 // (recommended by git status command)
 
-export function unstageFilesAsync(rootDirectory: string, filePaths: string[]): Promise<void> {
+export function unstageFilesAsync(rootDirectory: string, files: File[]): Promise<void> {
     return new Promise((resolve, reject) => {
 
         let error = "";
+
+        const filePaths = files.map(x => x.path);
+        files.forEach(x => {
+            if (!filePaths.includes(x.originalPath))
+                filePaths.push(x.originalPath)
+        })
 
         const gitRestore = spawn("git", ["restore", "--staged", ...filePaths], {
             cwd: rootDirectory
