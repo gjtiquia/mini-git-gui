@@ -33,17 +33,21 @@ export function FilesTable(props: { files: File[]; checkboxState: CheckboxState;
 
                         const checkboxId = "file-" + fileIndex;
 
-                        return <div key={fileIndex} className="flex items-center gap-3">
-                            <Checkbox
-                                id={checkboxId}
-                                checked={checkboxState.isCheckboxChecked(fileIndex)}
-                                onCheckedChange={() => checkboxState.onCheckboxCheckedChanged(fileIndex)} />
+                        return (
+                            <div key={fileIndex} className="flex items-center gap-3">
+                                <Checkbox
+                                    id={checkboxId}
+                                    checked={checkboxState.isCheckboxChecked(fileIndex)}
+                                    onCheckedChange={() => checkboxState.onCheckboxCheckedChanged(fileIndex)}
+                                />
 
-                            <div className="flex items-center gap-3">
-                                <p className="font-mono">{file.statusCode}</p>
-                                <Label htmlFor={checkboxId}>{file.path}</Label>
+                                <div className="flex items-center gap-3">
+                                    <p className="font-mono">{file.statusCode}</p>
+                                    <Label htmlFor={checkboxId}>{file.name}</Label>
+                                    <Label htmlFor={checkboxId}>{file.path}</Label>
+                                </div>
                             </div>
-                        </div>;
+                        );
                     })}
                 </div>
             </div>
