@@ -94,6 +94,7 @@ for (let i = 0; i < 16; i++) {
     dummyUnstagedFiles.push({
         statusCode: "M",
         status: "modified",
-        path: "/a/really/super-super/duper/long/path/that/is/actually/like/really/long.jpg"
+        path: "/a/really/super-super/duper/long/path/that/is/actually/like/really/long.jpg",
+        name: "long.jpg"
     })
 }
