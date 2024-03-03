@@ -27,12 +27,60 @@ type TokenDiff = { tokenType: TokenType, line: string }
 type TokenType = "Added" | "Removed" | "Unchanged" | "Gray"
 
 export function gitDiffUnstagedFileAsync(rootDirectory: string, file: File): Promise<FileDiff> {
+    if (file.status === "untracked")
+        return diffUntrackedFileAsync(rootDirectory, file);
+
+    return diffTrackedFileAsync(rootDirectory, file);
+}
+
+function diffUntrackedFileAsync(rootDirectory: string, file: File): Promise<FileDiff> {
     return new Promise((resolve, reject) => {
 
-        if (file.status === "untracked") {
-            reject("TODO : Handle untracked files")
-            return;
-        }
+        let error = "";
+        const lineDiffs: LineDiff[] = [];
+
+        const filePath = file.path;
+
+        const cat = spawn("cat", [filePath], {
+            cwd: rootDirectory
+        });
+
+        // Note: this may get called multiple times before process exit
+        cat.stdout.on('data', (data) => {
+            const rawData: string = data.toString();
+            // console.log(rawData);
+
+            const parsedLines = rawData.split("\n")
+            // console.log(parsedLines);
+
+            const partialLineDiffs: LineDiff[] = []
+            parsedLines.forEach(line => {
+                partialLineDiffs.push([{ tokenType: "Added", line }])
+            })
+
+            // console.log(partialLineDiffs);
+            lineDiffs.push(...partialLineDiffs);
+        })
+
+        // Note: this may get called multiple times before process exit
+        cat.stderr.on('data', (data) => {
+            error += `${data} `;
+        });
+
+        cat.on('exit', (code, signal) => {
+            if (code === 1) {
+                console.error(`Child process exited with code ${code} and signal ${signal}, Error: ${error}`);
+                reject(error);
+                return;
+            }
+
+            resolve({ lines: lineDiffs });
+        });
+    })
+}
+
+function diffTrackedFileAsync(rootDirectory: string, file: File): Promise<FileDiff> {
+    return new Promise((resolve, reject) => {
 
         let error = "";
         const lineDiffs: LineDiff[] = [];
