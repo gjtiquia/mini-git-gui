@@ -10,4 +10,5 @@ export const stackAtom = atom<Stack>("None");
 type UnstagedFile = AppRouterOutput["getStatus"]["unstagedFiles"][0]
 type StagedFile = AppRouterOutput["getStatus"]["stagedFiles"][0]
 type File = UnstagedFile | StagedFile
-export const selectedFilesAtom = atom<File[]>([])
+type FileType = "Unstaged" | "Staged"
+export const selectedFilesAtom = atom<{ fileType: FileType, selectedFiles: File[] }>({ fileType: "Unstaged", selectedFiles: [] })

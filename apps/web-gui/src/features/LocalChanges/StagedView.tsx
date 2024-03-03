@@ -5,6 +5,7 @@ import { FilesTable } from "./FilesTable";
 import { CommitDialog } from "./CommitDialog";
 import { useState } from "react";
 import type { StagedFile } from "./types"
+import { OptionsButton } from "./OptionsButton";
 
 export function StagedView(props: { stagedFiles: StagedFile[] }) {
 
@@ -36,6 +37,10 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
     });
 
     const checkboxState = useCheckboxState(files.length);
+
+    function getSelectedFiles() {
+        return files.filter((_, index) => checkboxState.checkedCheckboxIndexes.includes(index));
+    }
 
     function onUnstageClicked() {
         if (!checkboxState.hasAtLeastOneCheckboxChecked)
@@ -77,22 +82,29 @@ function StagedFilesTable(props: { files: StagedFile[] }) {
         <div className="flex-grow min-h-0 flex flex-col gap-2">
             <FilesTable files={files} checkboxState={checkboxState} />
 
-            <div className="grid grid-cols-3 gap-2">
-                <Button
-                    variant={"secondary"}
-                    onClick={() => onUnstageClicked()}
+            <div className="flex gap-2">
+                <OptionsButton
+                    selectedFiles={{ fileType: "Staged", selectedFiles: getSelectedFiles() }}
                     disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
-                >
-                    Unstage
-                </Button>
+                />
 
-                <Button
-                    className="col-span-2"
-                    onClick={() => onCommitClicked()}
-                    disabled={!canClickCommit()}
-                >
-                    Commit All Staged Files
-                </Button>
+                <div className="flex-grow grid grid-cols-3 gap-2">
+                    <Button
+                        variant={"secondary"}
+                        onClick={() => onUnstageClicked()}
+                        disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
+                    >
+                        Unstage
+                    </Button>
+
+                    <Button
+                        className="col-span-2"
+                        onClick={() => onCommitClicked()}
+                        disabled={!canClickCommit()}
+                    >
+                        Commit All Staged Files
+                    </Button>
+                </div>
             </div>
 
             <CommitDialog

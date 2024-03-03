@@ -53,3 +53,8 @@ export const fileSchema = z.object({
     path: z.string(),
     name: z.string(),
 })
+
+export type FileDiff = { lines: LineDiff[] }
+export type LineDiff = TokenDiff[]
+export type TokenDiff = { tokenType: TokenType, line: string }
+export type TokenType = "Added" | "Removed" | "Unchanged" | "Gray"

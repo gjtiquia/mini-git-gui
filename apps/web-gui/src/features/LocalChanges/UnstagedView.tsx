@@ -66,7 +66,7 @@ export function UnstagedFilesTable(props: { files: UnstagedFile[] }) {
 
             <div className="flex gap-2">
                 <OptionsButton
-                    selectedFiles={getSelectedFiles()}
+                    selectedFiles={{ fileType: "Unstaged", selectedFiles: getSelectedFiles() }}
                     disabled={!checkboxState.hasAtLeastOneCheckboxChecked()}
                 />
 

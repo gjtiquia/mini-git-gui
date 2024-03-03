@@ -11,6 +11,7 @@ import { gitPushAsync } from '../features/gitPush';
 import { gitPullAsync } from '../features/gitPull';
 import { gitFetchAsync } from '../features/gitFetch';
 import { getUnstagedFileChangesProcedure } from './getUnstagedFileChangesProcedure';
+import { getStagedFileChangesProcedure } from './getStagedFileChangesProcedure';
 
 const trpcAppRouter = router({
     // Push, Pull, Fetch
@@ -34,6 +35,7 @@ const trpcAppRouter = router({
 
     // DiffStack
     getUnstagedFileChanges: getUnstagedFileChangesProcedure(),
+    getStagedFileChanges: getStagedFileChangesProcedure(),
 });
 
 // export type definition of API

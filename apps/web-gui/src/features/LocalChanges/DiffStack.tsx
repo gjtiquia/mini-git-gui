@@ -7,7 +7,7 @@ import { File } from "./types";
 
 export function DiffStack() {
 
-    const selectedFiles = useAtomValue(selectedFilesAtom);
+    const { fileType, selectedFiles } = useAtomValue(selectedFilesAtom);
 
     const minIndex = 0;
     const maxIndex = selectedFiles.length - 1;
@@ -42,10 +42,17 @@ export function DiffStack() {
                     <p>File Path:</p>
                     <p className="flex-grow min-w-0 overflow-x-auto">{currentFile.path}</p>
                 </div>
+                <div className="flex gap-2">
+                    <p>File Status:</p>
+                    <p className="flex-grow min-w-0 overflow-x-auto">{currentFile.status}</p>
+                </div>
             </div>
 
             <div className="flex-grow min-h-0 border rounded-md p-2 overflow-auto">
-                <FileChangesView file={currentFile} />
+                {fileType === "Unstaged"
+                    ? <UnstagedFileChangesView file={currentFile} />
+                    : <StagedFileChangesView file={currentFile} />
+                }
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -69,7 +76,7 @@ export function DiffStack() {
     );
 }
 
-function FileChangesView(props: { file: File }) {
+function UnstagedFileChangesView(props: { file: File }) {
 
     const fileChangesQuery = trpc.getUnstagedFileChanges.useQuery({ file: props.file })
 
@@ -94,30 +101,31 @@ function FileChangesView(props: { file: File }) {
             })}
         </>
     )
+}
+
+function StagedFileChangesView(props: { file: File }) {
+
+    const fileChangesQuery = trpc.getStagedFileChanges.useQuery({ file: props.file })
+
+    if (fileChangesQuery.isPending || fileChangesQuery.isFetching)
+        return <p>Loading file changes...</p>
+
+    if (fileChangesQuery.error)
+        return <p className="text-red-500">{fileChangesQuery.error.message}</p>
 
     return (
         <>
-            <p>
-                <UnchangedSpan>unchanged content</UnchangedSpan>
-                <RedSpan>deleted</RedSpan>
-                <GreenSpan>added</GreenSpan>
-            </p>
-
-            <p>
-                <GraySpan>some gray info</GraySpan>
-            </p>
-
-            <p>
-                <RedSpan>deleted content</RedSpan>
-                <UnchangedSpan>unchanged content</UnchangedSpan>
-                <GreenSpan>added content</GreenSpan>
-            </p>
-
-            <p>
-                <GreenSpan>added content</GreenSpan>
-                <UnchangedSpan>unchanged content</UnchangedSpan>
-                <RedSpan>deleted content</RedSpan>
-            </p>
+            {fileChangesQuery.data.lines.map((line, index) => {
+                return (
+                    <code key={index} className="block whitespace-pre text-xs">
+                        {line.map((token, index) => {
+                            return (
+                                <TokenSpan key={index} token={token} />
+                            )
+                        })}
+                    </code>
+                )
+            })}
         </>
     )
 }
