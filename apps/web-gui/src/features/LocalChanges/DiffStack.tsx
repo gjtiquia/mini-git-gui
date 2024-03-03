@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { selectedFilesAtom } from "@/lib/atoms";
+import { AppRouterOutput, trpc } from "@/lib/trpc";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
+import { File } from "./types";
 
 export function DiffStack() {
 
@@ -42,8 +44,8 @@ export function DiffStack() {
                 </div>
             </div>
 
-            <div className="flex-grow min-h-0 border rounded-md p-2">
-                <p>TODO: Get File Diff From Git</p>
+            <div className="flex-grow min-h-0 border rounded-md p-2 overflow-auto">
+                <FileChangesView file={currentFile} />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -65,4 +67,89 @@ export function DiffStack() {
             </div>
         </div>
     );
+}
+
+function FileChangesView(props: { file: File }) {
+
+    const fileChangesQuery = trpc.getUnstagedFileChanges.useQuery({ file: props.file })
+
+    if (fileChangesQuery.isPending || fileChangesQuery.isFetching)
+        return <p>Loading file changes...</p>
+
+    if (fileChangesQuery.error)
+        return <p className="text-red-500">{fileChangesQuery.error.message}</p>
+
+    return (
+        <>
+            {fileChangesQuery.data.lines.map((line, index) => {
+                return (
+                    <code key={index} className="block whitespace-pre text-xs">
+                        {line.map((token, index) => {
+                            return (
+                                <TokenSpan key={index} token={token} />
+                            )
+                        })}
+                    </code>
+                )
+            })}
+        </>
+    )
+
+    return (
+        <>
+            <p>
+                <UnchangedSpan>unchanged content</UnchangedSpan>
+                <RedSpan>deleted</RedSpan>
+                <GreenSpan>added</GreenSpan>
+            </p>
+
+            <p>
+                <GraySpan>some gray info</GraySpan>
+            </p>
+
+            <p>
+                <RedSpan>deleted content</RedSpan>
+                <UnchangedSpan>unchanged content</UnchangedSpan>
+                <GreenSpan>added content</GreenSpan>
+            </p>
+
+            <p>
+                <GreenSpan>added content</GreenSpan>
+                <UnchangedSpan>unchanged content</UnchangedSpan>
+                <RedSpan>deleted content</RedSpan>
+            </p>
+        </>
+    )
+}
+
+type Token = AppRouterOutput["getUnstagedFileChanges"]["lines"][0][0]
+
+function TokenSpan(props: { token: Token }) {
+    if (props.token.tokenType === "Added")
+        return <GreenSpan>{props.token.line}</GreenSpan>
+
+    if (props.token.tokenType === "Removed")
+        return <RedSpan>{props.token.line}</RedSpan>
+
+    if (props.token.tokenType === "Unchanged")
+        return <UnchangedSpan>{props.token.line}</UnchangedSpan>
+
+    if (props.token.tokenType === "Gray")
+        return <GraySpan>{props.token.line}</GraySpan>
+}
+
+function UnchangedSpan(props: { children: React.ReactNode }) {
+    return <span>{props.children}</span>
+}
+
+function RedSpan(props: { children: React.ReactNode }) {
+    return <span className="bg-red-500/50">{props.children}</span>
+}
+
+function GreenSpan(props: { children: React.ReactNode }) {
+    return <span className="bg-green-500/50">{props.children}</span>
+}
+
+function GraySpan(props: { children: React.ReactNode }) {
+    return <span className="text-gray-500">{props.children}</span>
 }

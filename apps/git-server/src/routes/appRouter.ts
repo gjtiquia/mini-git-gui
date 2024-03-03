@@ -10,6 +10,7 @@ import { rootDirectory } from '../store';
 import { gitPushAsync } from '../features/gitPush';
 import { gitPullAsync } from '../features/gitPull';
 import { gitFetchAsync } from '../features/gitFetch';
+import { getUnstagedFileChangesProcedure } from './getUnstagedFileChangesProcedure';
 
 const trpcAppRouter = router({
     // Push, Pull, Fetch
@@ -30,6 +31,9 @@ const trpcAppRouter = router({
     // StagedChanges View
     unstageFiles: unstageFilesProcedure(),
     commitFiles: commitFilesProcedure(),
+
+    // DiffStack
+    getUnstagedFileChanges: getUnstagedFileChangesProcedure(),
 });
 
 // export type definition of API
