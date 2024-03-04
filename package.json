@@ -11,7 +11,10 @@
     "build": "turbo build",
     "start:git-server": "cd apps/git-server && npm run start",
     "dev:git-server": "cd apps/git-server && npm run dev",
-    "dev:web-gui": "cd apps/web-gui && npm run dev"
+    "dev:web-gui": "cd apps/web-gui && npm run dev",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "turbo run build test && changeset publish"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1",
