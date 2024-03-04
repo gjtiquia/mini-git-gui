@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { trpc } from "@/lib/trpc";
 import { useToast } from "@/components/ui/use-toast"
 
-const API_URL = "http://localhost:3000";
+// const API_URL = "http://localhost:3000";
+const API_URL = "";
 
 export function OuterProvider(props: { children: React.ReactNode }) {
     const { toast } = useToast()

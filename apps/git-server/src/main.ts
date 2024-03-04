@@ -5,10 +5,13 @@ import { appRouter } from "./routes/appRouter";
 console.log("Running @mini-git-gui/git-server...")
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Global Middleware
 app.use(cors()); // Enable all origins
+
+// Static File Server
+app.use(express.static("../web-gui/dist"))
 
 // Set Routes
 app.use("/app", appRouter);
