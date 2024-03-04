@@ -1,0 +1,18 @@
+{
+  "name": "mini-git-gui",
+  "version": "0.2.0",
+  "description": "",
+  "bin": {
+    "mini-git-gui": "dist/bin.js"
+  },
+  "scripts": {
+    "start": "node dist/bin.js",
+    "build": "tsup src/bin.ts"
+  },
+  "keywords": [],
+  "author": "gjtiquia",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.2"
+  }
+}
