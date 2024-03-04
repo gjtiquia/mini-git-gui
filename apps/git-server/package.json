@@ -1,9 +1,28 @@
 {
   "name": "@mini-git-gui/git-server",
-  "version": "0.2.0",
+  "description": "Git server for Mini Git GUI.",
+  "version": "0.3.0",
   "author": "gjtiquia",
   "license": "MIT",
+  "homepage": "https://github.com/gjtiquia/mini-git-gui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gjtiquia/mini-git-gui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gjtiquia/mini-git-gui/issues"
+  },
+  "keywords": [
+    "git",
+    "git-gui",
+    "git-client"
+  ],
   "main": "./dist/main.js",
+  "files": [
+    "dist/**/*",
+    "public/**/*",
+    "src/**/*"
+  ],
   "scripts": {
     "start": "node dist/run.js",
     "build": "bash ./build.sh",

@@ -1,18 +1,34 @@
 {
   "name": "mini-git-gui",
-  "version": "0.2.0",
-  "description": "",
+  "description": "A minimalistic mobile-first Git client.",
+  "version": "0.3.0",
+  "author": "gjtiquia",
+  "license": "MIT",
+  "homepage": "https://github.com/gjtiquia/mini-git-gui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gjtiquia/mini-git-gui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gjtiquia/mini-git-gui/issues"
+  },
+  "keywords": [
+    "git",
+    "git-gui",
+    "git-client"
+  ],
   "type": "module",
   "bin": {
     "mini-git-gui": "dist/bin.js"
   },
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
     "start": "node dist/bin.js",
     "build": "tsup src/bin.ts --format cjs,esm --clean"
   },
-  "keywords": [],
-  "author": "gjtiquia",
-  "license": "MIT",
   "dependencies": {
     "@mini-git-gui/git-server": "*",
     "get-port": "^7.0.0"
