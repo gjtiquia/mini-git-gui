@@ -6,11 +6,12 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "node dist/main.js",
-    "build": "tsup src/main.ts",
-    "dev": "npm run build -- --watch --onSuccess \"npm run start\"",
+    "build": "bash ./build.sh",
+    "dev": "tsup src/main.ts --watch --onSuccess \"npm run start\"",
     "test": "jest"
   },
   "dependencies": {
+    "@mini-git-gui/web-gui": "*",
     "@trpc/server": "^11.0.0-next-beta.274",
     "cors": "^2.8.5",
     "express": "^4.18.2",

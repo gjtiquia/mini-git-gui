@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors()); // Enable all origins
 
 // Static File Server
-app.use(express.static("../web-gui/dist"))
+app.use(express.static("public"))
 
 // Set Routes
 app.use("/app", appRouter);

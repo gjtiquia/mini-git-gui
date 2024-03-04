@@ -133,17 +133,21 @@ function StagedFileChangesView(props: { file: File }) {
 type Token = AppRouterOutput["getUnstagedFileChanges"]["lines"][0][0]
 
 function TokenSpan(props: { token: Token }) {
+
+    // Prevents empty lines from not rendering
+    const line = props.token.line.length > 0 ? props.token.line : " ";
+
     if (props.token.tokenType === "Added")
-        return <GreenSpan>{props.token.line}</GreenSpan>
+        return <GreenSpan>{line}</GreenSpan>
 
     if (props.token.tokenType === "Removed")
-        return <RedSpan>{props.token.line}</RedSpan>
+        return <RedSpan>{line}</RedSpan>
 
     if (props.token.tokenType === "Unchanged")
-        return <UnchangedSpan>{props.token.line}</UnchangedSpan>
+        return <UnchangedSpan>{line}</UnchangedSpan>
 
     if (props.token.tokenType === "Gray")
-        return <GraySpan>{props.token.line}</GraySpan>
+        return <GraySpan>{line}</GraySpan>
 }
 
 function UnchangedSpan(props: { children: React.ReactNode }) {
