@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { pageAtom, serverConfigAtom } from "@/lib/atoms";
+import { pageAtom, serverConnectionStateAtom } from "@/lib/atoms";
 import { LocalChangesView } from "@/features/LocalChanges";
 import { CommitsView } from "@/features/ShowAllCommits";
 import { Toaster } from "@/components/ui/toaster"
@@ -9,15 +9,15 @@ import { StackScreen } from "./StackScreen";
 import { PendingConnectionToServerView, ReconnectToServerView } from "./BeforeLoad";
 
 export function Root() {
-    const serverConfig = useAtomValue(serverConfigAtom);
+    const connectionState = useAtomValue(serverConnectionStateAtom);
 
-    if (serverConfig.state === "Pending")
+    if (connectionState === "Pending")
         return <PendingConnectionToServerView />
 
-    if (serverConfig.state === "Error")
+    if (connectionState === "Error")
         return <ReconnectToServerView />
 
-    // Only initialize the trpc client when the url from serverConfig is valid
+    // Only initialize the trpc client when the connection to server is established succeessfully
     return <AppRootWithProviders />
 }
 

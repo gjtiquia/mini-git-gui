@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { trpc } from "@/lib/trpc";
 import { useToast } from "@/components/ui/use-toast"
 import { useAtomValue } from 'jotai';
-import { serverConfigAtom } from '@/lib/atoms';
+import { serverUrlAtom } from '@/lib/atoms';
 
 export function ExternalStateProvider(props: { children: React.ReactNode }) {
 
@@ -44,12 +44,12 @@ export function ExternalStateProvider(props: { children: React.ReactNode }) {
         })
     }));
 
-    const serverConfig = useAtomValue(serverConfigAtom);
+    const url = useAtomValue(serverUrlAtom);
     const [trpcClient] = useState(() =>
         trpc.createClient({
             links: [
                 httpBatchLink({
-                    url: serverConfig.url + "/app",
+                    url: url + "/app",
                 }),
             ],
         }),

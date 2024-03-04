@@ -1,17 +1,18 @@
-import { useAtom } from "jotai";
-import { serverConfigAtom } from "@/lib/atoms";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { serverConnectionStateAtom, serverUrlAtom } from "@/lib/atoms";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 export function PendingConnectionToServerView() {
 
-    const [serverConfig, setServerConfig] = useAtom(serverConfigAtom);
+    const url = useAtomValue(serverUrlAtom);
+    const [connectionState, setConnectionState] = useAtom(serverConnectionStateAtom);
 
     useEffect(() => {
         async function healthcheckAsync() {
             try {
-                const response = await (fetch(serverConfig.url + "/healthcheck"));
+                const response = await (fetch(url + "/healthcheck"));
                 // console.log(response);
                 if (!response.ok) {
                     onError();
@@ -32,15 +33,15 @@ export function PendingConnectionToServerView() {
         }
 
         function onSuccess() {
-            setServerConfig({ state: "Success", url: serverConfig.url });
+            setConnectionState("Success");
         }
 
         function onError() {
-            setServerConfig({ state: "Error", url: serverConfig.url });
+            setConnectionState("Error");
         }
 
         healthcheckAsync();
-    }, [serverConfig, setServerConfig]);
+    }, [url, connectionState, setConnectionState]);
 
     return (
         <p>Connecting to git server...</p>
@@ -49,12 +50,14 @@ export function PendingConnectionToServerView() {
 
 export function ReconnectToServerView() {
 
-    const [serverConfig, setServerConfig] = useAtom(serverConfigAtom);
-    const [url, setUrl] = useState(serverConfig.url);
+    const [url, setUrl] = useAtom(serverUrlAtom);
+    const setConnectionState = useSetAtom(serverConnectionStateAtom);
+    const [inputUrl, setInpurUrl] = useState(url);
 
     function onReconnectClicked() {
-        // console.log("Setting server url to:", url);
-        setServerConfig({ state: "Pending", url });
+        console.log("Setting server url to:", inputUrl);
+        setUrl(inputUrl);
+        setConnectionState("Pending");
     }
 
     return (
@@ -64,7 +67,7 @@ export function ReconnectToServerView() {
             <p>Unable to connect to git server!</p>
             <p>Please re-enter the server URL and try again</p>
 
-            <Input placeholder="eg. http://localhost:3000" value={url} onChange={e => setUrl(e.target.value)} />
+            <Input placeholder="eg. http://localhost:3000" value={inputUrl} onChange={e => setInpurUrl(e.target.value)} />
             <Button onClick={onReconnectClicked}>Reconnect</Button>
         </div>
     );
