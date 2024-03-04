@@ -3,11 +3,12 @@
   "version": "0.2.0",
   "author": "gjtiquia",
   "license": "MIT",
-  "main": "dist/main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "start": "node dist/run.js",
     "build": "bash ./build.sh",
-    "dev": "tsup src/main.ts src/run.ts --watch --onSuccess \"npm run start\"",
+    "build:compile": "tsup src/main.ts src/run.ts --format cjs,esm --clean",
+    "dev": "npm run build:compile -- --watch --onSuccess \"npm run start\"",
     "test": "jest"
   },
   "dependencies": {

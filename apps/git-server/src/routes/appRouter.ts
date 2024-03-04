@@ -6,7 +6,7 @@ import { stageFilesProcedure } from './stageFilesProcedure';
 import { unstageFilesProcedure } from './unstageFilesProcedure';
 import { discardFilesProcedure } from './discardFilesProcedure';
 import { commitFilesProcedure } from './commitFilesProcedure';
-import { rootDirectory } from '../store';
+import { getRootDirectory } from '../store';
 import { gitPushAsync } from '../features/gitPush';
 import { gitPullAsync } from '../features/gitPull';
 import { gitFetchAsync } from '../features/gitFetch';
@@ -15,9 +15,9 @@ import { getStagedFileChangesProcedure } from './getStagedFileChangesProcedure';
 
 const trpcAppRouter = router({
     // Push, Pull, Fetch
-    push: publicProcedure.mutation(async () => await gitPushAsync(rootDirectory)),
-    pull: publicProcedure.mutation(async () => await gitPullAsync(rootDirectory)),
-    fetch: publicProcedure.mutation(async () => await gitFetchAsync(rootDirectory)),
+    push: publicProcedure.mutation(async () => await gitPushAsync(getRootDirectory())),
+    pull: publicProcedure.mutation(async () => await gitPullAsync(getRootDirectory())),
+    fetch: publicProcedure.mutation(async () => await gitFetchAsync(getRootDirectory())),
 
     // Commits View
     getAllCommits: getAllCommitsProcedure(),

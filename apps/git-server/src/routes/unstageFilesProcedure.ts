@@ -1,6 +1,6 @@
 import z from "zod";
 import { publicProcedure } from "../lib/trpc";
-import { rootDirectory } from "../store";
+import { getRootDirectory } from "../store";
 import { unstageFilesAsync } from "../features/unstageFiles";
 import { fileSchema } from "../features/types";
 
@@ -11,6 +11,6 @@ export function unstageFilesProcedure() {
         }))
         .mutation(async (opts) => {
             const { input } = opts;
-            await unstageFilesAsync(rootDirectory, input.files);
+            await unstageFilesAsync(getRootDirectory(), input.files);
         });
 }

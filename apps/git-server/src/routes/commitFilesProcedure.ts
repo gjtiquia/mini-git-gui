@@ -1,6 +1,6 @@
 import z from "zod";
 import { publicProcedure } from "../lib/trpc";
-import { rootDirectory } from "../store";
+import { getRootDirectory } from "../store";
 import { commitFilesAsync } from "../features/commitFiles";
 
 export function commitFilesProcedure() {
@@ -13,6 +13,6 @@ export function commitFilesProcedure() {
             const { input } = opts;
 
             // console.log("commitFilesProcedure input", input);
-            await commitFilesAsync(rootDirectory, input.message, input.description);
+            await commitFilesAsync(getRootDirectory(), input.message, input.description);
         });
 }

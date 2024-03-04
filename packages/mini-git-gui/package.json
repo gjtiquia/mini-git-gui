@@ -2,18 +2,20 @@
   "name": "mini-git-gui",
   "version": "0.2.0",
   "description": "",
+  "type": "module",
   "bin": {
     "mini-git-gui": "dist/bin.js"
   },
   "scripts": {
     "start": "node dist/bin.js",
-    "build": "tsup src/bin.ts"
+    "build": "tsup src/bin.ts --format cjs,esm --clean"
   },
   "keywords": [],
   "author": "gjtiquia",
   "license": "MIT",
   "dependencies": {
-    "@mini-git-gui/git-server": "*"
+    "@mini-git-gui/git-server": "*",
+    "get-port": "^7.0.0"
   },
   "devDependencies": {
     "tsup": "^8.0.2"

@@ -10,7 +10,7 @@ mkdir public
 cp -R ../web-gui/dist/. public/
 
 echo "Compiling TypeScript into JavaScript..."
-npx tsup src/main.ts src/run.ts
+npm run build:compile
 
 echo "Finished building @mini-git-gui/git-server!"
 

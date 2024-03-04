@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 
-process.env.PORT = "4000";
+import getPort, { portNumbers } from "get-port";
+import { main } from "@mini-git-gui/git-server";
 
-import { main } from "@mini-git-gui/git-server"
-main();
+bin();
+
+async function bin() {
+    const availablePort = await getPort({ port: portNumbers(3000, 65000) })
+    process.env.PORT = availablePort.toString();
+
+    const rootDirectory = process.cwd();
+    // const rootDirectory = "../../../mini-link-stash"
+
+    main(rootDirectory);
+}

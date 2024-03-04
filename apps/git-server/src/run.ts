@@ -1,3 +1,4 @@
 import { main } from "./main";
 
-main();
+const devDirectory = process.cwd(); // The mini-git-gui git repo
+main(devDirectory);
