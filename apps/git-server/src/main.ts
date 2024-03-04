@@ -14,6 +14,7 @@ app.use(cors()); // Enable all origins
 app.use(express.static("public"))
 
 // Set Routes
+app.get("/healthcheck", (req, res) => res.status(200).send({ message: "ok" }))
 app.use("/app", appRouter);
 
 app.listen(PORT, () => {

@@ -1,6 +1,9 @@
 import { atom } from 'jotai'
 import { AppRouterOutput } from './trpc';
 
+type ServerState = "Pending" | "Success" | "Error"
+export const serverConfigAtom = atom<{ state: ServerState, url: string }>({ state: "Pending", url: "" });
+
 type Page = "AllCommits" | "LocalChanges"
 export const pageAtom = atom<Page>("AllCommits");
 

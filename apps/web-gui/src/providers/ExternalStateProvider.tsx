@@ -3,13 +3,12 @@ import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
 import { trpc } from "@/lib/trpc";
 import { useToast } from "@/components/ui/use-toast"
+import { useAtomValue } from 'jotai';
+import { serverConfigAtom } from '@/lib/atoms';
 
-// const API_URL = "http://localhost:3000";
-const API_URL = "";
+export function ExternalStateProvider(props: { children: React.ReactNode }) {
 
-export function OuterProvider(props: { children: React.ReactNode }) {
     const { toast } = useToast()
-
     const [queryClient] = useState(() => new QueryClient({
         queryCache: new QueryCache({
             // replacement of onError per query in React Query v4. Global handling instead.
@@ -45,11 +44,12 @@ export function OuterProvider(props: { children: React.ReactNode }) {
         })
     }));
 
+    const serverConfig = useAtomValue(serverConfigAtom);
     const [trpcClient] = useState(() =>
         trpc.createClient({
             links: [
                 httpBatchLink({
-                    url: API_URL + "/app",
+                    url: serverConfig.url + "/app",
                 }),
             ],
         }),
