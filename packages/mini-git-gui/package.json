@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "gjtiquia",
   "license": "MIT",
+  "dependencies": {
+    "@mini-git-gui/git-server": "*"
+  },
   "devDependencies": {
     "tsup": "^8.0.2"
   }

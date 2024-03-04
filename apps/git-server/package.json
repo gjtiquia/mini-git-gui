@@ -5,9 +5,9 @@
   "license": "MIT",
   "main": "dist/main.js",
   "scripts": {
-    "start": "node dist/main.js",
+    "start": "node dist/run.js",
     "build": "bash ./build.sh",
-    "dev": "tsup src/main.ts --watch --onSuccess \"npm run start\"",
+    "dev": "tsup src/main.ts src/run.ts --watch --onSuccess \"npm run start\"",
     "test": "jest"
   },
   "dependencies": {
