@@ -54,8 +54,10 @@ npx mini-git-gui
 - Frontend
   - React
   - Vite
+  - Tailwind
   - Shadcn/ui
   - Tanstack Query
+  - Jotai
 - Backend
   - Express
   - TRPC
