@@ -1,3 +1,4 @@
+import path from "path";
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { createContext, publicProcedure, router } from "../lib/trpc";
 import { getAllCommitsProcedure } from './getAllCommitsProcedure';
@@ -14,6 +15,9 @@ import { getUnstagedFileChangesProcedure } from './getUnstagedFileChangesProcedu
 import { getStagedFileChangesProcedure } from './getStagedFileChangesProcedure';
 
 const trpcAppRouter = router({
+    // General
+    getRepoName: publicProcedure.query(() => ({ repoName: path.basename(getRootDirectory()) })),
+
     // Push, Pull, Fetch
     push: publicProcedure.mutation(async () => await gitPushAsync(getRootDirectory())),
     pull: publicProcedure.mutation(async () => await gitPullAsync(getRootDirectory())),

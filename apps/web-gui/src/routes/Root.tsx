@@ -7,6 +7,8 @@ import { ExternalStateProvider } from "@/providers/ExternalStateProvider";
 import { Header } from "./components/page/Header";
 import { StackScreen } from "./StackScreen";
 import { PendingConnectionToServerView, ReconnectToServerView } from "./BeforeLoad";
+import { trpc } from "@/lib/trpc";
+import { useEffect } from "react";
 
 export function Root() {
     const connectionState = useAtomValue(serverConnectionStateAtom);
@@ -29,9 +31,16 @@ function AppRootWithProviders() {
     )
 }
 
-// TODO : set document.title
-
 function AppRoot() {
+
+    const repoNameQuery = trpc.getRepoName.useQuery(undefined);
+    useEffect(() => {
+        if (repoNameQuery.data) {
+            const repoName = repoNameQuery.data.repoName;
+            document.title = "Mini Git GUI: " + repoName;
+        }
+    }, [repoNameQuery.data])
+
     return (
         <>
             <div className="h-dvh flex flex-col">

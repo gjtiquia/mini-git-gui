@@ -55,7 +55,7 @@ export function ReconnectToServerView() {
     const [inputUrl, setInpurUrl] = useState(url);
 
     function onReconnectClicked() {
-        console.log("Setting server url to:", inputUrl);
+        // console.log("Setting server url to:", inputUrl);
         setUrl(inputUrl);
         setConnectionState("Pending");
     }
