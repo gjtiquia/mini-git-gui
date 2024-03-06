@@ -29,6 +29,8 @@ function AppRootWithProviders() {
     )
 }
 
+// TODO : set document.title
+
 function AppRoot() {
     return (
         <>
