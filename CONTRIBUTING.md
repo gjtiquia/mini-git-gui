@@ -1,5 +1,33 @@
 # Mini Git GUI - Contributing
 
+This monorepo uses NPM workspaces and is managed with [Turborepo](https://turbo.build/repo).
+
+## Commands
+
+Install all dependencies.
+
+```bash
+npm install
+```
+
+Build all packages.
+
+```bash
+npm run build
+```
+
+Start a dev server for `git-server`
+
+```bash
+npm run dev:git-server
+```
+
+Start a dev server for `web-gui`
+
+```bash
+npm run dev:web-gui
+```
+
 ## Publishing to NPM
 
 Login to npm account.
