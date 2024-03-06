@@ -8,11 +8,11 @@ A minimalistic git client for mobile.
 
 You have a terminal installed.
 - Android: [Termux](https://termux.dev/en/)
-- iOS: __(Coming Soon)__
+- iOS: _(Coming Soon)_
 
 You have Node.js installed.
 - Android: [Termux - Node.js](https://wiki.termux.com/index.php?title=Node.js&mobileaction=toggle_view_mobile)
-- iOS: __(Coming Soon)__
+- iOS: _(Coming Soon)_
 
 ### Usage
 
