@@ -54,6 +54,8 @@ Can continue editing the changelog summary later in the generated markdown file.
 
 Commit after adding a changeset(s).
 
+Can add multiple changesets before consuming them.
+
 ### Versioning
 
 ```bash
