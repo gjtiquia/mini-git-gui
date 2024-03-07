@@ -30,7 +30,7 @@
     "build": "tsup src/bin.ts --format cjs,esm --clean"
   },
   "dependencies": {
-    "@mini-git-gui/git-server": "*",
+    "@mini-git-gui/git-server": "0.4.1",
     "get-port": "^7.0.0"
   },
   "devDependencies": {
