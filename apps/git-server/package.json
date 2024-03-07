@@ -1,7 +1,7 @@
 {
   "name": "@mini-git-gui/git-server",
   "description": "Git server for Mini Git GUI.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "gjtiquia",
   "license": "MIT",
   "homepage": "https://github.com/gjtiquia/mini-git-gui#readme",
@@ -36,7 +36,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@mini-git-gui/web-gui": "0.4.1",
+    "@mini-git-gui/web-gui": "0.4.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",

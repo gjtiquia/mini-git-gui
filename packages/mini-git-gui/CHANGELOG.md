@@ -1,5 +1,13 @@
 # mini-git-gui
 
+## 0.4.2
+
+### Patch Changes
+
+- 3ddd49b: set fixed version for internal dependencies
+- Updated dependencies [3ddd49b]
+  - @mini-git-gui/git-server@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
