@@ -1,7 +1,7 @@
 {
   "name": "@mini-git-gui/git-server",
   "description": "Git server for Mini Git GUI.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "gjtiquia",
   "license": "MIT",
   "homepage": "https://github.com/gjtiquia/mini-git-gui#readme",

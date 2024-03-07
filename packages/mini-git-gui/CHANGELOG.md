@@ -1,5 +1,13 @@
 # mini-git-gui
 
+## 0.4.1
+
+### Patch Changes
+
+- 01d3783: output shows version code
+- Updated dependencies [01d3783]
+  - @mini-git-gui/git-server@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
