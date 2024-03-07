@@ -3,8 +3,11 @@ import express from "express";
 import cors from "cors";
 import { appRouter } from "./routes/appRouter";
 import { getRootDirectory, setRootDirectory } from "./store";
+import packageJson from "../package.json"
 
 export function main(rootDirectory: string) {
+    console.log("Mini Git GUI v" + packageJson.version)
+
     console.log("Running @mini-git-gui/git-server...")
 
     const app = express();
